@@ -3,23 +3,28 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
-
 import Cycle from './models/Cycle.js';
 import dotenv from 'dotenv';
 dotenv.config();
+
+
 // ===============================
 // MONGODB CONNECTION
 // ===============================
 const MONGODB_URI = process.env.MONGODB_URI;
 
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => {
-    console.log('✅ MongoDB conectado com sucesso');
-  })
-  .catch((err) => {
-    console.error('❌ Erro ao conectar no MongoDB:', err.message);
-  });
+async function connectMongo() {
+  try {
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(MONGODB_URI);
+      console.log("✅ MongoDB conectado com sucesso");
+    }
+  } catch (err) {
+    console.error("❌ Erro ao conectar no MongoDB:", err.message);
+  }
+}
+
+connectMongo();
 
 // ===============================
 // CONFIG
