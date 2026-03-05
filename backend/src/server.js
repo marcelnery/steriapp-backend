@@ -9,19 +9,31 @@ dotenv.config();
 
 
 // ===============================
-// MONGODB CONNECTION
+// MONGODB CONNECTION (SERVERLESS SAFE)
 // ===============================
+
 const MONGODB_URI = process.env.MONGODB_URI;
 
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
 async function connectMongo() {
-  try {
-    if (mongoose.connection.readyState === 0) {
-      await mongoose.connect(MONGODB_URI);
-      console.log("✅ MongoDB conectado com sucesso");
-    }
-  } catch (err) {
-    console.error("❌ Erro ao conectar no MongoDB:", err.message);
+  if (cached.conn) {
+    return cached.conn;
   }
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
+      console.log("✅ MongoDB conectado");
+      return mongoose;
+    });
+  }
+
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
 
 connectMongo();
