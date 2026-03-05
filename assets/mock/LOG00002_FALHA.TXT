@@ -1,0 +1,20 @@
+Medical Report: v1.0
+Model: Woson TANZO
+SN: 987654321
+Date: 30/12/2025
+Cycle: 2
+
+Program: Quick
+Vacuum Time: 20
+Sterilization Time: 200
+Dry Time: 60
+Sterilization Temp: 121
+
+Stag Time Temp1 Temp2 Press Purg Puls1
+12:00:00 050.0 000.0 000.0 12:00:20
+12:00:20 052.0 000.0 003.0 12:00:40
+
+Error No: 0
+Operator: Jane Doe
+Date: 30/12/2025
+Time: 12:01

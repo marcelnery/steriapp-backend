@@ -1,0 +1,42 @@
+name: sterilink
+description: "Aplicativo para automação e monitoramento de autoclaves odontológicas."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+ 
+  cupertino_icons: ^1.0.8
+
+  pdf: ^3.11.0
+  printing: ^5.13.0
+  path_provider: ^2.1.3
+  open_filex: ^4.5.0
+  barcode: ^2.2.5
+  barcode_widget: ^2.0.4
+  app_links: ^6.1.1
+  qr_flutter: ^4.1.0
+  http: ^1.2.0
+  flutter_blue_plus: ^1.34.6
+  permission_handler: ^11.3.1
+  shared_preferences: ^2.2.2
+  
+
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/mock/
