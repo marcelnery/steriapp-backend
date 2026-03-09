@@ -64,7 +64,7 @@ app.get('/', (req, res) => {
 // ===============================
 // POST – SALVA / ATUALIZA LAUDO (MONGO)
 // ===============================
-app.post('/api/laudo', async (req, res) => {
+app.post('/laudo', async (req, res) => {
   try {
     const laudo = req.body;
 
@@ -101,7 +101,7 @@ app.post('/api/laudo', async (req, res) => {
 // ===============================
 // GET – PAGINAÇÃO DE CICLOS (MONGO)
 // ===============================
-app.get('/api/laudos', async (req, res) => {
+app.get('/laudos', async (req, res) => {
   const page = Number(req.query.page) || 1;
   const limit = Number(req.query.limit) || 10;
   const skip = (page - 1) * limit;
@@ -124,7 +124,7 @@ app.get('/api/laudos', async (req, res) => {
 // ===============================
 // GET – JSON DO LAUDO (MONGO)
 // ===============================
-app.get('/api/laudo/:id', async (req, res) => {
+app.get('laudo/:id', async (req, res) => {
   const laudo = await Cycle.findOne({ id: req.params.id });
 
   if (!laudo) {
