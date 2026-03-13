@@ -87,6 +87,25 @@ class CyclesRepository {
   // =========================
   // ADD FROM BLE JSON
   // =========================
+  
+/* CycleModel? addFromBleJson(Map<String, dynamic> json) {
+
+  final cycle = CycleModel.fromBleJson(json);
+
+  if (exists(cycle.id)) {
+    print("⚠️ Ciclo já recebido: ${cycle.id}");
+    return null;
+  }
+
+  _cycles.add(cycle);
+
+  print("✅ Novo ciclo BLE: ${cycle.id}");
+
+  return cycle;
+}
+
+*/
+
 CycleModel? addFromBleJson(Map<String, dynamic> json) {
 
   final cycle = CycleModel.fromBleJson(json);
@@ -99,6 +118,11 @@ CycleModel? addFromBleJson(Map<String, dynamic> json) {
   _cycles.add(cycle);
 
   print("✅ Novo ciclo BLE: ${cycle.id}");
+
+  // 🔵 ENVIAR PARA BACKEND
+  sendToBackend(cycle).catchError((_) {
+    print("⚠️ Backend offline — salvo local");
+  });
 
   return cycle;
 }

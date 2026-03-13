@@ -38,8 +38,8 @@ export default class CycleModel {
     // ===============================
     // ALIASES (UI)
     // ===============================
-    this.sterTemp = Number(data.sterTemp);
-    this.sterTime = Number(data.sterTime);
+ this.sterTemp = data.sterTemp !== undefined ? Number(data.sterTemp) : null;
+this.sterTime = data.sterTime !== undefined ? Number(data.sterTime) : null;
 
     // ===============================
     // VALORES MEDIDOS

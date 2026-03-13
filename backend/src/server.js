@@ -5,6 +5,9 @@ import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import Cycle from './models/Cycle.js';
 import dotenv from 'dotenv';
+import laudoRoutes from "./routes/laudo.routes.js";
+
+
 dotenv.config();
 
 
@@ -54,6 +57,8 @@ app.use(cors());
 app.use(express.json());
 const publicPath = path.join(process.cwd(), 'src/public');
 app.use(express.static(publicPath));
+
+app.use("/api", laudoRoutes); // mudanca de rota para api 12/03
 // ===============================
 // ROTA RAIZ
 // ===============================
@@ -61,42 +66,6 @@ app.get('/', (req, res) => {
   res.send('🚀 Backend SteriLink rodando com sucesso AGORA');
 });
 
-// ===============================
-// POST – SALVA / ATUALIZA LAUDO (MONGO)
-// ===============================
-app.post('/laudo', async (req, res) => {
-  try {
-    const laudo = req.body;
-
-    if (!laudo || !laudo.id) {
-      return res.status(400).json({
-        error: 'ID do ciclo é obrigatório',
-      });
-    }
-
-    const saved = await Cycle.findOneAndUpdate(
-      { id: laudo.id },
-      laudo,
-      {
-        upsert: true,
-        new: true,
-      }
-    );
-
-    console.log('✅ Laudo salvo:', saved.id);
-
-    return res.status(201).json({
-      message: 'Laudo salvo com sucesso',
-      id: saved.id,
-      publicUrl: `/laudo/${saved.id}`,
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      error: 'Erro ao salvar laudo',
-    });
-  }
-});
 
 // ===============================
 // GET – PAGINAÇÃO DE CICLOS (MONGO)
@@ -124,7 +93,7 @@ app.get('/laudos', async (req, res) => {
 // ===============================
 // GET – JSON DO LAUDO (MONGO)
 // ===============================
-app.get('laudo/:id', async (req, res) => {
+app.get('/api/laudo/:id', async (req, res) => {
   const laudo = await Cycle.findOne({ id: req.params.id });
 
   if (!laudo) {
@@ -146,7 +115,7 @@ app.get('/laudo/:id', async (req, res) => {
     return res.status(404).send('Laudo não encontrado');
   }
 
-  return res.sendFile(path.join(__dirname, '../public/laudo.html'));
+  return res.sendFile(path.join(__dirname, 'public', 'laudo.html'));
 });
 
 // ===============================
