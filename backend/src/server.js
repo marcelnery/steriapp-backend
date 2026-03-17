@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import Cycle from './models/Cycle.js';
 import dotenv from 'dotenv';
 import laudoRoutes from "./routes/laudo.routes.js";
+import registerRoutes from "./routes/register.js";
 
 
 dotenv.config();
@@ -65,6 +66,8 @@ app.use("/api", laudoRoutes); // mudanca de rota para api 12/03
 app.get('/', (req, res) => {
   res.send('🚀 Backend SteriLink rodando com sucesso AGORA');
 });
+
+app.use("/api", registerRoutes);
 
 
 // ===============================
