@@ -8,11 +8,16 @@ router.post("/register", async (req, res) => {
   try {
 
     const {
-      email,
-      password,
-      clinic,
-      autoclaves
-    } = req.body;
+  email,
+  password,
+  clinic,
+  cnpj,
+  address,
+  phone,
+  dentist,
+  cro,
+  autoclaves
+} = req.body;
 
     // =========================
     // VERIFICAR SE USUÁRIO EXISTE
@@ -30,13 +35,17 @@ router.post("/register", async (req, res) => {
     // CRIAR USUÁRIO
     // =========================
 
-    const user = new User({
-      email,
-      password,
-      clinic,
-      autoclaves
-    });
-
+ const user = new User({
+  email,
+  password,
+  clinic,
+  cnpj,
+  address,
+  phone,
+  dentist,
+  cro,
+  autoclaves
+});
     await user.save();
 
     res.json({
