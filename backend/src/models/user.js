@@ -42,9 +42,22 @@ const userSchema = new mongoose.Schema({
     required: true
   },
 
-  clinic: {
-    type: String
+  clinic: String,
+
+  cnpj: String,
+
+  address: {
+    street: String,
+    district: String,
+    city: String,
+    state: String,
   },
+
+  phone: String,
+
+  dentist: String,
+
+  cro: String,
 
   autoclaves: [autoclaveSchema],
 
