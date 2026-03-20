@@ -59,7 +59,10 @@ const userSchema = new mongoose.Schema({
 
   cro: String,
 
-  autoclaves: [autoclaveSchema],
+  autoclaves: {
+  type: [autoclaveSchema],
+  default: []
+  },
 
   createdAt: {
     type: Date,

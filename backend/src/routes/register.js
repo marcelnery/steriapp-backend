@@ -5,6 +5,12 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
 
+  console.log("===== BODY RECEBIDO =====");
+  console.log(req.body);
+
+  console.log("===== AUTOCLAVES RECEBIDAS =====");
+  console.log(req.body.autoclaves);
+
   try {
 
     const {
