@@ -8,7 +8,7 @@ import dotenv from 'dotenv';
 import laudoRoutes from "./routes/laudo.routes.js";
 import registerRoutes from "./routes/register.js";
 import authRoutes from "./routes/auth.js";
-
+import User from "./models/user.js";
 
 dotenv.config();
 
@@ -70,6 +70,31 @@ app.get('/', (req, res) => {
 
 app.use("/api", registerRoutes);
 app.use("/api", authRoutes); // rota para login
+
+
+// ===============================
+// GET USER DATA                   nova rota para pegar o CAD do cliente 23/03
+// ===============================
+app.get("/api/user/:email", async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.params.email });
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found"
+      });
+    }
+
+    res.json(user);
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      error: "Server error"
+    });
+  }
+});
 
 
 // ===============================
