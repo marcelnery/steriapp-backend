@@ -9,6 +9,8 @@ import laudoRoutes from "./routes/laudo.routes.js";
 import registerRoutes from "./routes/register.js";
 import authRoutes from "./routes/auth.js";
 import User from "./models/user.js";
+import autoclaveRoutes from "./routes/autoclave.js";
+
 
 dotenv.config();
 
@@ -70,6 +72,7 @@ app.get('/', (req, res) => {
 
 app.use("/api", registerRoutes);
 app.use("/api", authRoutes); // rota para login
+app.use("/api", autoclaveRoutes); // rota para adicionar e excluir autoclave no CAD
 
 
 // ===============================
