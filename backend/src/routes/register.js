@@ -50,7 +50,11 @@ router.post("/register", async (req, res) => {
   phone,
   dentist,
   cro,
-  autoclaves
+    autoclaves: (autoclaves || []).map(a => ({
+    brand: a.brand,
+    model: a.model,
+    serial: a.serial
+  }))
 });
     await user.save();
 
