@@ -9,9 +9,9 @@ const router = express.Router()
 
 router.post("/login", async (req,res)=>{
 
-    const {email,password} = req.body
+    const {nickname,password} = req.body
 
-    const user = await User.findOne({email})
+    const user = await User.findOne({nickname})
 
     if(!user){
         return res.status(401).json({error:"user not found"})

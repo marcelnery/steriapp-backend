@@ -14,6 +14,7 @@ router.post("/register", async (req, res) => {
   try {
 
     const {
+  nickname,
   email,
   password,
   clinic,
@@ -29,6 +30,14 @@ router.post("/register", async (req, res) => {
     // VERIFICAR SE USUÁRIO EXISTE
     // =========================
 
+    const existingNickname = await User.findOne({ nickname });
+
+if (existingNickname) {
+  return res.status(400).json({
+    error: "Nickname já existe"
+  });
+}
+
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -42,6 +51,7 @@ router.post("/register", async (req, res) => {
     // =========================
 
  const user = new User({
+  nickname,
   email,
   password,
   clinic,
@@ -52,7 +62,7 @@ router.post("/register", async (req, res) => {
   cro,
     autoclaves: (autoclaves || []).map(a => ({
     brand: a.brand || a.marca,
-    model: a.model || a.model,
+    model: a.model || a.modelo,
     serial: a.serial || a.seriado
   }))
 });

@@ -31,7 +31,15 @@ const autoclaveSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema({
 
-  email: {
+  nickname: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true
+  },
+
+   email: {
     type: String,
     required: true,
     unique: true
