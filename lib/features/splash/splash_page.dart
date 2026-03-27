@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../dashboard/dashboard_page.dart';
+import '../auth/auth_guard.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -41,7 +41,7 @@ class _SplashPageState extends State<SplashPage>
     Timer(const Duration(seconds: 5), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) => const DashboardPage(),
+          builder: (_) => const AuthGuard(),
         ),
       );
     });

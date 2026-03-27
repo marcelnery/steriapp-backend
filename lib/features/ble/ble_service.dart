@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'ble_constants.dart';
+import '../services/autoclave_auth_service.dart';
+import '../models/user_model.dart';
 
 class BleService {
 
@@ -30,6 +32,8 @@ BleService._internal();
   bool _isListening = false;
   bool _frameStarted = false;
   bool _sessionEnabled = false;
+
+  UserModel? currentUser;
   
 
  // BOTAO APERTADO!
@@ -39,6 +43,47 @@ BleService._internal();
      _sessionEnabled = true;
   }
 
+
+// =========================
+// DETECTAR AUTOCLAVES BLE
+// =========================
+static Future<List<Map<String,String>>> detectAutoclaves() async {
+
+  List<Map<String,String>> devices = [];
+
+  await FlutterBluePlus.startScan(
+    timeout: const Duration(seconds: 4),
+    androidUsesFineLocation: true,
+  );
+
+  await for (final results in FlutterBluePlus.scanResults) {
+
+    for(final r in results){
+
+      final name = r.device.name;
+
+      if(name == BleConstants.deviceName){
+
+        final serial = r.device.remoteId.str;
+
+        if(!devices.any((d) => d["serial"] == serial)){
+          devices.add({
+            "model": "Woson Autoclave",
+            "serial": serial,
+          });
+        }
+
+      }
+
+    }
+
+  }
+
+  await FlutterBluePlus.stopScan();
+
+  return devices;
+
+}
  // =========================
   // CONEXÃO BLE
   // =========================
@@ -298,6 +343,30 @@ void _finalizeJson() {
 
     print("✅ JSON válido");
 
+      // =========================
+    // AUTORIZAÇÃO DA AUTOCLAVE
+    // =========================
+
+    final serial = decoded["serial"];
+
+    if(currentUser != null && serial != null){
+
+      final authorized =
+          AutoclaveAuthService.isAutoclaveAuthorized(
+            currentUser!,
+            serial,
+          );
+
+      if(!authorized){
+        print("⛔ Autoclave NÃO autorizada: $serial");
+        return;
+      }
+
+      print("🔐 Autoclave autorizada: $serial");
+
+    }
+
+    // envia JSON para o app
     _jsonController.add(decoded);
 
   } catch (e) {
@@ -305,6 +374,14 @@ void _finalizeJson() {
     print("❌ JSON inválido descartado: $e");
   }
 }
+
+
+// AUTENTICAÇÃO PARA LIBERAR OS CICLOS 16/03 SERIAL NUMBER 
+
+void setUser(UserModel user){
+  currentUser = user;
+}
+
 
 
 // =========================

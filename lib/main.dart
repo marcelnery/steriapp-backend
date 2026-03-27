@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_links/app_links.dart';
-
+import 'features/auth/auth_service.dart';
 import 'features/splash/splash_page.dart';
 import 'features/dashboard/dashboard_page.dart';
 import 'features/cycles/pages/cycle_detail_page.dart';
@@ -10,10 +10,15 @@ import 'features/cycles/repositories/cycles_repository.dart';
 final GlobalKey<NavigatorState> navigatorKey =
     GlobalKey<NavigatorState>();
 
-void main() {
-  runApp(const MyApp());
-}
+Future<void> main() async {
 
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await AuthService.init();   // inicializa token salvo
+
+  runApp(const MyApp());
+
+}
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 

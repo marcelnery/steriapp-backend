@@ -1,5 +1,6 @@
 import express from "express";
 import User from "../models/user.js";
+import bcrypt from "bcryptjs";
 
 const router = express.Router();
 
@@ -49,6 +50,9 @@ if (existingNickname) {
     // =========================
     // CRIAR USUÁRIO
     // =========================
+
+    // 🔐 gerar hash da senha
+const hashedPassword = await bcrypt.hash(password, 10);
 
  const user = new User({
   nickname,

@@ -4,6 +4,7 @@
 import express from "express"
 import jwt from "jsonwebtoken"
 import User from "../models/user.js"
+import bcrypt from "bcryptjs";
 
 const router = express.Router()
 
@@ -17,8 +18,10 @@ router.post("/login", async (req,res)=>{
         return res.status(401).json({error:"user not found"})
     }
 
-    if(user.password !== password){
-        return res.status(401).json({error:"invalid password"})
+  const isMatch = await bcrypt.compare(password, user.password);
+
+if(!isMatch){
+  return res.status(401).json({ error: "invalid password" });
     }
 
     const token = jwt.sign(

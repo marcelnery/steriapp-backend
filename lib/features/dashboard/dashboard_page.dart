@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../cycles/pages/cycles_page.dart'; // ✅ Importa CyclesPage
 import '../errors/pages/error_parameters_page.dart';
+import '../profile/profile_page.dart';
 
 /// =========================
 /// DASHBOARD PRINCIPAL
@@ -85,7 +86,7 @@ class _DashboardPageState extends State<DashboardPage> {
             const SizedBox(height: 16),
 
             // =========================
-            // BOTÕES FUTUROS (Configurações / Status)
+            // BOTÃO (CADASTRO CLIENTE)
             // =========================
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -93,10 +94,17 @@ class _DashboardPageState extends State<DashboardPage> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // TODO: abrir configurações
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute
+                      (builder:(_)=>const
+                      ProfilePage(),
+                      ),
+                    );
+                    // TODO: abrir dados cadastrais
                   },
                   icon: const Icon(Icons.settings),
-                  label: const Text('Configurações'),
+                  label: const Text('Dados Cadastrais'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: wosonPurple,
                     foregroundColor: Colors.white,
