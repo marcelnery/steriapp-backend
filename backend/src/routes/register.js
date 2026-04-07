@@ -57,7 +57,7 @@ const hashedPassword = await bcrypt.hash(password, 10);
  const user = new User({
   nickname,
   email,
-  password,
+  password: hashedPassword, // cripto
   clinic,
   cnpj,
   address,
