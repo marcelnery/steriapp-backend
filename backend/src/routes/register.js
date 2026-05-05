@@ -30,8 +30,8 @@ router.post("/register", async (req, res) => {
     // =========================
     // VERIFICAR SE USUÁRIO EXISTE
     // =========================
-
-    const existingNickname = await User.findOne({ nickname });
+    const normalizedNickname = nickname.toLowerCase().trim();
+    const existingNickname = await User.findOne({ nickname: normalizedNickname });
 
 if (existingNickname) {
   return res.status(400).json({
@@ -55,9 +55,9 @@ if (existingNickname) {
 const hashedPassword = await bcrypt.hash(password, 10);
 
  const user = new User({
-  nickname,
+  nickname: normalizedNickname,
   email,
-  password: hashedPassword, // cripto
+  password: hashedPassword, // cripto a criptografia deu certo para o app 04/05/2026
   clinic,
   cnpj,
   address,

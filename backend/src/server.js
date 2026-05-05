@@ -11,6 +11,8 @@ import authRoutes from "./routes/auth.js";
 import User from "./models/user.js";
 import autoclaveRoutes from "./routes/autoclave.js";
 
+import { authMiddleware } from "./middleware/auth.middleware.js";   // NOVA ROTA CRIADA PARA ID UNICO 04/05
+
 
 dotenv.config();
 
@@ -76,26 +78,23 @@ app.use("/api", autoclaveRoutes); // rota para adicionar e excluir autoclave no 
 
 
 // ===============================
-// GET USER DATA                   nova rota para pegar o CAD do cliente 23/03
+// GET USER DATA                   nova rota para pegar o CAD do cliente 23/03 NOVA ATT 04/05 ID UNICO RETIRADA DO EMAIL
 // ===============================
-app.get("/api/user/:email", async (req, res) => {
+
+app.get("/api/user", authMiddleware, async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.params.email });
+
+    const user = await User.findById(req.userId);
 
     if (!user) {
-      return res.status(404).json({
-        error: "User not found"
-      });
+      return res.status(404).json({ error: "User not found" });
     }
 
     res.json(user);
 
   } catch (err) {
     console.error(err);
-
-    res.status(500).json({
-      error: "Server error"
-    });
+    res.status(500).json({ error: "Server error" });
   }
 });
 
