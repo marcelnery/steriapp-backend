@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '/features/auth/auth_service.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -102,8 +103,16 @@ void showAddAutoclaveDialog() {
 
   Future<void> loadUserData() async {
 
+    final token = await AuthService.getToken();
+
+    print(" TOKEN USADO : $token");
+
     final response = await http.get(
-      Uri.parse("https://backend-nu-nine-29.vercel.app/api/user/marcelodontotec@gmail.com"),
+      Uri.parse("https://backend-nu-nine-29.vercel.app/api/user"),
+      headers:{
+        "Content-Type" : "application/json",
+        "Authorization" : "Bearer $token",
+      },
     );
 
     if (response.statusCode == 200) {
@@ -133,48 +142,55 @@ void showAddAutoclaveDialog() {
       });
 
     } else {
+      print("❌ STATUS : ${response.statusCode}");
+      print("❌ BODY : ${response.body}");
       print("❌ Erro ao buscar usuário");
     }
   }
 
   Future<void> addAutoclaveToServer(Map<String, dynamic> autoclave) async {
 
-    final response = await http.post(
-      Uri.parse("https://backend-nu-nine-29.vercel.app/api/user/add-autoclave"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-  
-          "email": emailController.text,
-  "brand": "Woson",
-  "model": autoclave["model"],
-  "serial": autoclave["serial"],
+  final token = await AuthService.getToken();
 
-      }),
-    );
+  final response = await http.post(
+    Uri.parse("https://backend-nu-nine-29.vercel.app/api/user/add-autoclave"),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    },
+    body: jsonEncode({
+      "brand": "Woson",
+      "model": autoclave["model"],
+      "serial": autoclave["serial"],
+    }),
+  );
 
-    if (response.statusCode == 200) {
-      print("✅ Autoclave adicionada");
-      await loadUserData();
-    } else {
-      print("❌ Erro ao adicionar");
-    }
+  if (response.statusCode == 200) {
+    print("✅ Autoclave adicionada");
+    await loadUserData();
+  } else {
+    print("❌ Erro ao adicionar");
   }
-
+}
 
 Future<void> removeAutoclaveFromServer(String serial) async {
 
+  final token = await AuthService.getToken();
+
   final response = await http.post(
     Uri.parse("https://backend-nu-nine-29.vercel.app/api/user/remove-autoclave"),
-    headers: {"Content-Type": "application/json"},
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    },
     body: jsonEncode({
-      "email": emailController.text,
       "serial": serial,
     }),
   );
 
   if (response.statusCode == 200) {
     print("🗑️ Autoclave removida");
-    await loadUserData(); // 🔥 atualiza tela
+    await loadUserData();
   } else {
     print("❌ Erro ao remover");
   }

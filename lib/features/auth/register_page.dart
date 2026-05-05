@@ -203,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
   // =========================
   final body = {
     "email": emailController.text,
-    "nickname": nicknameController.text,
+    "nickname": nicknameController.text.trim().toLowerCase(),  // PARA EVITAR CAPSLOCK NA DIGITACAO E SAIR MAIUSCULO OU MINUSCULO
     "password": passwordController.text,
     "clinic": clinicController.text,
     "cnpj": cnpjController.text,

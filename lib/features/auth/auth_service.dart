@@ -4,6 +4,8 @@
                LOGOUT
                SALVAR TOKEN
                VERIFICAR SESSÃO
+
+               NOVA ATT 04/05 PARA FAZER ID
 */               
 
 
@@ -95,23 +97,26 @@ static Future<bool> register({
   }
 
   /// SALVAR TOKEN
-  static Future<void> saveToken(String token) async {
+static Future<void> saveToken(String token) async {
 
-    final prefs = await SharedPreferences.getInstance();
+  final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString("auth_token", token);
+  await prefs.setString("auth_token", token);
 
-  }
+  print("💾 TOKEN SALVO: $token"); // 🔥 AQUI
 
+}
   /// PEGAR TOKEN
   static Future<String?> getToken() async {
 
-    final prefs = await SharedPreferences.getInstance();
+  final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getString("auth_token");
+  final token = prefs.getString("auth_token");
 
-  }
+  print("📦 TOKEN RECUPERADO: $token"); // 🔥 AQUI
 
+  return token;
+}
   /// VERIFICAR SE ESTÁ LOGADO
   static bool isLogged() {
 

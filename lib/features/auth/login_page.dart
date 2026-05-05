@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() => loading = true);
 
     final success = await AuthService.login(
-      nicknameController.text,
+      nicknameController.text.trim().toLowerCase(),
       passwordController.text,
     );
 
