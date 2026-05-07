@@ -12,6 +12,12 @@ const CycleSchema = new mongoose.Schema(
   {
     id: { type: String, required: true, unique: true },
 
+    userId: {
+              type: mongoose.Schema.Types.ObjectId,        // ADICIONADO ID PARA CICLOS VINCULAR COM USER 06/05/2026
+              ref: "User",
+              required: true,
+            },
+
     cycleNumber: Number,
 
     model: String,

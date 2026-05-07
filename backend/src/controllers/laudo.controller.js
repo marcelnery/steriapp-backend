@@ -8,7 +8,9 @@ export const saveLaudo = async (req, res) => {
 
     const data = req.body;
 
-    const cycle = new CycleModel(data);
+    // const cycle = new CycleModel(data);  AQUI MUDA O NOVO CICLO PARA ID FUNCIONAR ELE PERTENCE AO USER X 06/05/2026
+
+    const cycle = new CycleModel({...data, userId: req.userId,}); //AQUI !!!!
 
     // salva no Mongo
     const saved = await Cycle.create(cycle.toJSON());
