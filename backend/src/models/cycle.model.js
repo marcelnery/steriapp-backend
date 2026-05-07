@@ -7,6 +7,8 @@ export default class CycleModel {
     // ===============================
     this.id = data.id; // Ex: SN123-C001-20260105
 
+    this.userId = data.userId;          // MUDANCA IMPORTANTE PARA IDENTIFICACAO DO USUARIO PARA CILCOS 07/05/2026
+
     // ===============================
     // IDENTIFICAÇÃO DO CICLO
     // ===============================
@@ -104,6 +106,7 @@ this.sterTime = data.sterTime !== undefined ? Number(data.sterTime) : null;
   toJSON() {
     return {
       id: this.id,
+      userId: this.userId,
       cycleNumber: this.cycleNumber,
 
       model: this.model,

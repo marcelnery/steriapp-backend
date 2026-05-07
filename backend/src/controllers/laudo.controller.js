@@ -14,7 +14,7 @@ export const saveLaudo = async (req, res) => {
 
     // salva no Mongo
     const saved = await Cycle.create(cycle.toJSON());
-
+   console.log(" JSON FINAL:", cycle.toJSON());
     console.log("✅ Ciclo salvo:", saved.id);
 
     // 🚨 DETECTA CICLO COM ERRO
