@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import '../models/cycle_model.dart';
 import '../parsers/cycle_txt_parser.dart';
 
+import '/features/auth/auth_service.dart';
+
 class CyclesRepository {
   // =========================
   // SINGLETON
@@ -134,8 +136,45 @@ CycleModel? addFromBleJson(Map<String, dynamic> json) {
   }
 
   // =========================
-  // SEND TO BACKEND
+  // SEND TO BACKEND                     // MUDANCA MAIS IMPORTANTE DO ID AQUI 06/05/2026 
   // =========================
+
+
+  Future<void> sendToBackend(CycleModel cycle) async {
+
+  final token = await AuthService.getToken();
+
+  if(token == null){
+    throw Exception("Usuário não autenticado");
+  }
+
+  final uri = Uri.parse('$baseUrl/api/laudo');
+
+  final response = await http.post(
+    uri,
+
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+
+    body: jsonEncode(cycle.toJson()),
+  );
+
+  if (response.statusCode != 200 &&
+      response.statusCode != 201) {
+
+    print("❌ BODY BACKEND: ${response.body}");
+
+    throw Exception(
+      'Erro ao enviar ciclo (${response.statusCode})'
+    );
+  }
+
+  print('🌐 Ciclo autenticado salvo: ${cycle.id}');
+}
+
+/*
   Future<void> sendToBackend(CycleModel cycle) async {
     final uri = Uri.parse('$baseUrl/api/laudo');
 
@@ -152,10 +191,13 @@ CycleModel? addFromBleJson(Map<String, dynamic> json) {
 
     print('🌐 Ciclo salvo no backend/Mongo: ${cycle.id}');
   }
+*/
+
 
   // =========================
 // ADD LOCAL
 // =========================
+
 void addCycle(CycleModel cycle) {
   _cycles.add(cycle);
 }
