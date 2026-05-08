@@ -38,12 +38,44 @@ class _CyclesPageState extends State<CyclesPage> {
   bool bleConnecting = false;
   bool bleConnected = false; // NOVO: indicador visual BLE
 
-  @override
-  void initState() {
-    super.initState();
-    _loadFirstPage();
-    _scrollController.addListener(_onScroll);
+  String? registeredSerial; // NOVA FUNCAO PARA COMPARAR O SERIAL RECEBIDO E O SERIAL TRANSMITIDO 07/05/2026
+
+@override
+void initState() {
+  super.initState();
+
+  loadRegisteredSerial();
+
+  _loadFirstPage();
+
+  _scrollController.addListener(_onScroll);
+}
+// ====================================================
+// NOVA ACAO PARA O SERIAL SER REGISTRADO E ANALISADO
+// ====================================================
+
+Future<void> loadRegisteredSerial() async {
+  try {
+
+    final user = await repository.getLoggedUser();
+
+    final serial =
+        user['autoclaves'][0]['serial']
+            .toString();
+
+    registeredSerial = serial
+        .replaceAll(' ', '')
+        .trim()
+        .toUpperCase();
+
+    debugPrint('🔐 SERIAL REGISTRADO: $registeredSerial');
+
+  } catch (e) {
+
+    debugPrint('❌ Erro carregando serial');
+    debugPrint(e.toString());
   }
+}
 
   // =========================
   // PERMISSÕES BLE
@@ -133,7 +165,67 @@ class _CyclesPageState extends State<CyclesPage> {
           debugPrint('📡 JSON RECEBIDO VIA BLE');
           debugPrint(json.toString());
 
-          final cycle = repository.addFromBleJson(json);
+  //        final cycle = repository.addFromBleJson(json);  alterando com seguranca a transmissao ble 07/05/2026
+//          aqui fazemos a conferencia de quando chega o ciclo de ble se tem o numero de serie no ciclo e vai ser 
+//          comparado com o do cadastro para se for igual passa pra frente e se nao for nao passa
+
+// ===============================
+// SERIAL RECEBIDO DA ESP32 de BLE
+// ===============================
+
+final incomingSerial =
+    (json['serial'] ?? '')
+        .toString()
+        .replaceAll(' ', '')
+        .trim()
+        .toUpperCase();
+
+debugPrint('📡 SERIAL RECEBIDO: $incomingSerial');
+
+debugPrint('🔐 SERIAL REGISTRADO: $registeredSerial');
+
+// ===============================
+// VALIDAÇÃO DE SEGURANÇA
+// ===============================
+
+if (registeredSerial == null ||
+    registeredSerial!.isEmpty) {
+
+  debugPrint('❌ Usuário sem serial cadastrado');
+
+  return;
+}
+
+// ===============================
+// BLOQUEIO DE AUTOCLAVE ERRADA
+// ===============================
+
+if (incomingSerial != registeredSerial) {
+
+  debugPrint('🚫 AUTOCLAVE NÃO AUTORIZADA');
+  debugPrint('🚫 Ciclo IGNORADO');
+
+  if (mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Esta autoclave não pertence ao usuário logado',
+        ),
+      ),
+    );
+  }
+
+  return;
+}
+
+// ===============================
+// SERIAL AUTORIZADO
+// ===============================
+
+debugPrint('✅ SERIAL AUTORIZADO');
+
+final cycle = repository.addFromBleJson(json);
+
 
           if (cycle != null && cycle.errorCode != null) {
   await ErrorReportService.prepareFactoryReport(cycle);

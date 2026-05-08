@@ -241,4 +241,51 @@ CycleModel findByCycleNumber(String cycleNumber) {
         throw Exception('Ciclo não encontrado (número=$cycleNumber)'),
   );
 }
+
+// =========================
+// GET LOGGED USER
+// =========================
+
+Future<Map<String, dynamic>> getLoggedUser() async {
+
+  final token = await AuthService.getToken();
+
+  if (token == null) {
+    throw Exception('Usuário não autenticado');
+  }
+
+  final uri = Uri.parse('$baseUrl/api/user');
+
+  final response = await http.get(
+
+    uri,
+
+    headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    },
+  );
+
+  if (response.statusCode != 200) {
+
+    print('❌ ERRO GET USER: ${response.body}');
+
+    throw Exception('Erro ao carregar usuário');
+  }
+
+  final json = jsonDecode(response.body);
+
+  print('👤 USUÁRIO LOGADO:');
+  print(json);
+
+  return json;
+}
+
+
+
+
+
+
+
+
 }
