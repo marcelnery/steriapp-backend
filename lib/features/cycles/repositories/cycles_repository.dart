@@ -122,9 +122,9 @@ CycleModel? addFromBleJson(Map<String, dynamic> json) {
   print("✅ Novo ciclo BLE: ${cycle.id}");
 
   // 🔵 ENVIAR PARA BACKEND
-  sendToBackend(cycle).catchError((_) {
-    print("⚠️ Backend offline — salvo local");
-  });
+ // sendToBackend(cycle).catchError((_) {
+  print("⚠️ Backend offline — salvo local");
+ // });
 
   return cycle;
 }

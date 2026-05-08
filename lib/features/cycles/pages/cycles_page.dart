@@ -209,7 +209,7 @@ if (incomingSerial != registeredSerial) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
-          'Esta autoclave não pertence ao usuário logado',
+          'AUTOCLAVE NÃO CADASTRADA OU CICLO SEM SN IGNORADO',
         ),
       ),
     );
