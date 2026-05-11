@@ -59,7 +59,23 @@ class CyclesRepository {
 
   try {
 
-    final response = await http.get(uri);
+  //  final response = await http.get(uri);  MUDANDO A AUTENTICACAO PARA FICAR CICLO X USUARIO 10/05/2026
+
+  final token = await AuthService.getToken();
+
+if (token == null) {
+  throw Exception("Usuário não autenticado");
+}
+
+final response = await http.get(
+
+  uri,
+
+  headers: {
+    'Authorization': 'Bearer $token',
+    'Content-Type': 'application/json',
+  },
+);
 
     if (response.statusCode != 200) {
       throw Exception();
