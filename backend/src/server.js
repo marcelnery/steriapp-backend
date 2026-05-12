@@ -11,8 +11,9 @@ import authRoutes from "./routes/auth.js";
 import User from "./models/user.js";
 import autoclaveRoutes from "./routes/autoclave.js";
 
-import { authMiddleware } from "./middleware/auth.middleware.js";   // NOVA ROTA CRIADA PARA ID UNICO 04/05
+import { authMiddleware } from "./middleware/auth.middleware.js";  // NOVA ROTA CRIADA PARA ID UNICO 04/05
 
+import laudosGetRoutes from "./routes/laudos.get.js";  // criado para o dashboard html ver ciclos 
 
 dotenv.config();
 
@@ -75,7 +76,7 @@ app.get('/', (req, res) => {
 app.use("/api", registerRoutes);
 app.use("/api", authRoutes); // rota para login
 app.use("/api", autoclaveRoutes); // rota para adicionar e excluir autoclave no CAD
-
+app.use("/api",laudosGetRoutes); // rota para ciclos no dashboard html
 
 // ===============================
 // GET USER DATA                   nova rota para pegar o CAD do cliente 23/03 NOVA ATT 04/05 ID UNICO RETIRADA DO EMAIL
