@@ -1,6 +1,6 @@
 import express from "express";
 
-import Cycle from "../models/cycle.js";
+import Cycle from "../models/Cycle.js";
 
 import { authMiddleware }
 from "../middleware/auth.middleware.js";
