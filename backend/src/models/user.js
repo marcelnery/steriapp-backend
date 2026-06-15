@@ -61,11 +61,17 @@ const userSchema = new mongoose.Schema({
     state: String,
   },
 
-  phone: String,
+  
 
-  dentist: String,
+   dentist: String,
 
-  cro: String,
+   cpf: String,
+
+   cro: String,
+
+   phone: String,
+
+   operator: String,
 
   autoclaves: {
   type: [autoclaveSchema],

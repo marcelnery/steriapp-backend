@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
 
+  
+
   console.log("===== BODY RECEBIDO =====");
   console.log(req.body);
 
@@ -23,13 +25,18 @@ router.post("/register", async (req, res) => {
   address,
   phone,
   dentist,
+  cpf,
   cro,
+  operator,
   autoclaves
 } = req.body;
 
     // =========================
     // VERIFICAR SE USUÁRIO EXISTE
     // =========================
+
+  console.log("CPF RECEBIDO:", cpf);
+  console.log("OPERATOR RECEBIDO:", operator);
     const normalizedNickname = nickname.toLowerCase().trim();
     const existingNickname = await User.findOne({ nickname: normalizedNickname });
 
@@ -54,6 +61,8 @@ if (existingNickname) {
     // 🔐 gerar hash da senha
 const hashedPassword = await bcrypt.hash(password, 10);
 
+
+
  const user = new User({
   nickname: normalizedNickname,
   email,
@@ -63,7 +72,9 @@ const hashedPassword = await bcrypt.hash(password, 10);
   address,
   phone,
   dentist,
+  cpf,
   cro,
+  operator,
     autoclaves: (autoclaves || []).map(a => ({
     brand: a.brand || a.marca,
     model: a.model || a.modelo,
@@ -71,6 +82,14 @@ const hashedPassword = await bcrypt.hash(password, 10);
   }))
 });
     await user.save();
+
+    console.log("======USUARIO SALVO=======");
+    console.log(user);
+
+    const savedUser = await User.findById(user._id);       
+
+    console.log("====== USUARIO LIDO DO MONGO ======");    // teste para ver o mongo 13/06 operador e cpf
+    console.log(savedUser);
 
     res.json({
       success: true,
