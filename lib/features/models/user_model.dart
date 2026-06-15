@@ -11,6 +11,8 @@ class UserModel {
   final Map<String, dynamic> address;
   final String phone;
   final String dentist;
+  final String cpf;
+  final String operator;
   final String cro;
   final List<AutoclaveModel> autoclaves;
 
@@ -21,7 +23,9 @@ class UserModel {
     required this.address,
     required this.phone,
     required this.dentist,
+    required this.cpf,
     required this.cro,
+    required this.operator,
     required this.autoclaves,
   });
 
@@ -37,7 +41,9 @@ class UserModel {
       address: json["address"] ?? {},
       phone: json["phone"] ?? "",
       dentist: json["dentist"] ?? "",
+      cpf: json["cpf"]??"",
       cro: json["cro"] ?? "",
+      operator: json["operator"] ??"",
       autoclaves: (json["autoclaves"] as List? ?? [])
           .map((e) => AutoclaveModel.fromJson(e))
           .toList(),
@@ -55,7 +61,9 @@ class UserModel {
       "address": address,
       "phone": phone,
       "dentist": dentist,
+      "cpf": cpf,
       "cro": cro,
+      "operator": operator,
       "autoclaves": autoclaves.map((a) => a.toJson()).toList(),
     };
   }

@@ -27,7 +27,9 @@ static Future<bool> register({
   required Map<String, String> address,
   required String phone,
   required String dentist,
+  required String cpf,
   required String cro,
+  required String operator,
   required List<Map<String, dynamic>> autoclaves,
 }) async {
 
@@ -47,7 +49,9 @@ static Future<bool> register({
         "address": address,
         "phone": phone,
         "dentist": dentist,
+        "cpf": cpf,
         "cro": cro,
+        "operator": operator,  
         "autoclaves": autoclaves,
       }),
     );

@@ -95,8 +95,8 @@ class CycleDetailPage extends StatelessWidget {
                       'Temp. Máx. Sensor 2',
                       '${cycle.maxTemperature2} °C'),
                   _infoRow(Icons.speed,
-                      'Pressão Máxima',
-                      '${cycle.maxPressure} bar'),
+                      'Pressão Máxima (bar)',
+                      '${cycle.maxPressure}'),
                 ]),
 
                 const SizedBox(height: 16),

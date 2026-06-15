@@ -167,6 +167,105 @@ class CycleModel {
 
   final DateTime now = DateTime.now();
 
+  // ADICIONADO TRECHO PARA COMPLETAR OS DADOS NO CYCLE PAGE E NO PDF 10/06/2026
+
+// =========================
+// CALCULA MÁXIMOS REAIS
+// =========================
+
+double maxTemp1 = 0;
+double maxTemp2 = 0;
+double maxPressure = 0;
+
+final stages =
+    (payload['stages'] as List<dynamic>? ?? []);
+
+for (final stage in stages) {
+
+  final temp1 =
+      (stage['temperature1'] as num?)?.toDouble() ?? 0;
+
+  final temp2 =
+      (stage['temperature2'] as num?)?.toDouble() ?? 0;
+
+  final pressure =
+      (stage['pressure'] as num?)?.toDouble() ?? 0;
+
+  if (temp1 > maxTemp1) {
+    maxTemp1 = temp1;
+  }
+
+  if (temp2 > maxTemp2) {
+    maxTemp2 = temp2;
+  }
+
+  if (pressure > maxPressure) {
+    maxPressure = pressure;
+  }
+}
+
+// PRA FAZER CALCULO DE MAX PRESSAO E MAX TEMPERATURA ACIMA
+
+// =========================
+// DATA REAL DO CICLO
+// =========================
+
+DateTime cycleDateTime = now;
+
+try {
+
+  final stages =
+      (payload['stages'] as List<dynamic>? ?? []);
+
+  final firstTime =
+      stages.isNotEmpty
+          ? stages.first['time']?.toString() ?? "00:00:00"
+          : "00:00:00";
+
+  final timeParts = firstTime.split(":");
+
+  int day;
+  int month;
+  int year;
+
+  if (date.contains("-")) {
+
+    // !!-!!-!!!! caso formato assim!
+
+    final dateParts = date.split("-");
+
+    day = int.parse(dateParts[0]);
+    month = int.parse(dateParts[1]);
+    year = int.parse(dateParts[2]);
+
+  } else {
+
+    // --/--/-- caso formato assim!
+
+    final dateParts = date.split("/");
+
+    day = int.parse(dateParts[0]);
+    month = int.parse(dateParts[1]);
+    year = 2000 + int.parse(dateParts[2]);
+  }
+
+  cycleDateTime = DateTime(
+    year,
+    month,
+    day,
+    int.parse(timeParts[0]),
+    int.parse(timeParts[1]),
+    int.parse(timeParts[2]),
+  );
+
+} catch (e) {
+
+  print("❌ Erro ao converter data do ciclo: $e");
+}
+// PARA FAZER A CORREÇÃO DE DATA AO PEGAR O DADO DE CICLO E MOSTRAR A DATA CORRETA
+
+
+
   return CycleModel(
     id: id,
     cycleNumber: cycleNumber,
@@ -174,22 +273,30 @@ class CycleModel {
     serialNumber: serial,
     version: '',
     program: payload['program']?.toString() ?? '',
-    sterilizationTemperature:
-        (payload['ster_temp'] as num?)?.toDouble() ?? 0,
-    sterilizationTime: payload['ster_time'] ?? 0,
-    vacuumTime: payload['vac_times'] ?? 0,
-    dryTime: payload['dry_time'] ?? 0,
-    sterTemp:
-        (payload['ster_temp'] as num?)?.toDouble() ?? 0,
-    sterTime: payload['ster_time'] ?? 0,
-    maxTemperature:
+    sterilizationTemperature:(payload['ster_temp'] as num?)?.toDouble() ?? 0,
+    sterilizationTime:((payload['ster_time'] ?? 0) / 60).round(),
+    vacuumTime:payload['vac_times'] ?? 0,
+    dryTime:((payload['dry_time'] ?? 0) / 60).round(),
+    sterTemp:(payload['ster_temp'] as num?)?.toDouble() ?? 0,
+    sterTime:((payload['ster_time'] ?? 0) / 60).round(),
+  
+  
+  /*  maxTemperature:
         (payload['max_temp'] as num?)?.toDouble() ?? 0,
     maxTemperature2:
-        (payload['min_temp'] as num?)?.toDouble() ?? 0,
+        (payload['min_temp'] as num?)?.toDouble() ?? 0,       MUDANDO PARA FAZER O CALCULO
     maxPressure:
         (payload['max_press'] as num?)?.toDouble() ?? 0,
-    startTime: now,
-    endTime: now,
+  */
+
+maxTemperature: maxTemp1,
+
+maxTemperature2: maxTemp2,
+
+maxPressure: maxPressure,
+
+    startTime: cycleDateTime,
+    endTime: cycleDateTime,
     result: status == 'success'
         ? 'SUCESSO'
         : 'ERRO',

@@ -85,21 +85,11 @@ class _SplashPageState extends State<SplashPage>
                       // =========================
                       // BRASÃO
                       // =========================
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.health_and_safety,
-                            size: 70,
-                            color: wosonPurple,
-                          ),
-                        ),
-                      ),
+                     Image.asset(
+                                 "assets/images/icon.png",
+                                width: 140,
+                                  height: 140,
+                                ),
 
                       const SizedBox(height: 24),
 
@@ -107,12 +97,12 @@ class _SplashPageState extends State<SplashPage>
                       // NOME DO APP
                       // =========================
                       const Text(
-                        'STERIAPP',
+                        'SteriApp',
                         style: TextStyle(
                           fontSize: 42,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w700,
                           color: Colors.white,
-                          letterSpacing: 2,
+                          letterSpacing: 1.5,
                         ),
                       ),
 

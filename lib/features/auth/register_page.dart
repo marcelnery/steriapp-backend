@@ -34,9 +34,11 @@ class _RegisterPageState extends State<RegisterPage> {
   // RESPONSÁVEL
   // =========================
   final dentistController = TextEditingController();
+   final cpfController = TextEditingController();
   final croController = TextEditingController();
   final userController = TextEditingController();
   final emailController = TextEditingController();
+   final operatorController = TextEditingController();
 
   //===========================
   // PASSWORD CONTROLE
@@ -215,7 +217,10 @@ class _RegisterPageState extends State<RegisterPage> {
     },
     "phone": phoneController.text,
     "dentist": dentistController.text,
+    "cpf": cpfController.text,
     "cro": croController.text,
+    "operator": operatorController.text,
+
     "autoclaves": autoclaves.map((a) => {
       "brand": "Woson",
       "model": a["model"].toString(),
@@ -243,7 +248,9 @@ final success = await AuthService.register(
 
   phone: body["phone"] as String,
   dentist: body["dentist"] as String,
+  cpf: body["cpf"] as String,
   cro: body["cro"] as String,
+  operator: body["operator"] as String,
 
   autoclaves: (body["autoclaves"] as List)
       .map((e) => Map<String, dynamic>.from(e))
@@ -291,10 +298,17 @@ final success = await AuthService.register(
 
             const SizedBox(height:20),
 
-            const Text("Responsável", style: TextStyle(fontSize:18,fontWeight:FontWeight.bold)),
+            const Text("Dados Pessoais",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,),
+            ),
 
-            TextField(controller: dentistController, decoration: const InputDecoration(labelText: "Dentista responsável")),
-            TextField(controller: croController, decoration: const InputDecoration(labelText: "CRO")),
+            TextField(controller: dentistController,decoration: const InputDecoration(labelText: "Nome do Dentista", ),
+            ),
+
+            TextField(controller: cpfController,decoration: const InputDecoration(labelText: "CPF",),
+            ),
+
+            TextField(controller: croController, decoration: const InputDecoration(labelText: "CRO",),
+            ),
 
             const Text("LOGIN", style: TextStyle(fontSize:18,fontWeight:FontWeight.bold)),
 
@@ -308,6 +322,12 @@ final success = await AuthService.register(
 
              TextField(controller: emailController,decoration: const InputDecoration(labelText: "E-mail"),
             ),
+
+            const SizedBox(height: 25),
+
+            const Text("Operador",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,),),
+
+            TextField(controller: operatorController,decoration: const InputDecoration(labelText: "Nome do Operador",),),
       
             const SizedBox(height:30),
 

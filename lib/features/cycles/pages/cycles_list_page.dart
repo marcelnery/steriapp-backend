@@ -86,8 +86,8 @@ class _CyclesListPageState extends State<CyclesListPage> {
                         '${cycle.maxTemperature.toStringAsFixed(1)} °C',
                       ),
                       _infoRow(
-                        'Pressão',
-                        '${cycle.maxPressure.toStringAsFixed(2)} bar',
+                        'Pressão (bar)',
+                        cycle.maxPressure.toStringAsFixed(2),
                       ),
                       _infoRow('Status', cycle.result.toUpperCase()),
                       _infoRow('Programa', cycle.program),

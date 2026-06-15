@@ -70,29 +70,22 @@ class _LoginPageState extends State<LoginPage> {
               children: [
 
                 // LOGO / ICON
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.health_and_safety,
-                    size: 60,
-                    color: wosonPurple,
-                  ),
-                ),
+                           
+                     Image.asset("assets/images/icon.png",
+                    width: 120,
+                  height: 120,
+                    ),
+                  
 
                 const SizedBox(height: 20),
 
                 const Text(
-                  "STERIAPP",
+                  "SteriApp",
                   style: TextStyle(
                     fontSize: 28,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                     color: Colors.white,
-                    letterSpacing: 2,
+                    letterSpacing: 1.5,
                   ),
                 ),
 
@@ -137,28 +130,49 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 25),
 
                       // BOTÃO ENTRAR
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: wosonPurple,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          onPressed: loading ? null : login,
-                          child: loading
-                              ? const CircularProgressIndicator(color: Colors.white)
-                              : const Text(
-                                  "Entrar",
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                        ),
-                      ),
+                    SizedBox(
+  width: double.infinity,
+  height: 58,
 
-                      const SizedBox(height: 15),
+  child: ElevatedButton(
 
+    onPressed: () async {
+
+      // efeito pequeno ao clicar
+      await Future.delayed(
+        const Duration(milliseconds: 120),
+      );
+
+      login();
+    },
+
+    style: ElevatedButton.styleFrom(
+
+      backgroundColor: wosonPurple,
+
+      foregroundColor: Colors.white,
+
+      elevation: 8,
+
+      shadowColor: wosonPurple.withOpacity(0.5),
+
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
+
+    child: const Text(
+      "Entrar",
+
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 0.5,
+      ),
+    ),
+  ),
+),
                       // BOTÃO CADASTRO
                       TextButton(
                         onPressed: () {

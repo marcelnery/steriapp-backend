@@ -89,8 +89,8 @@ class CyclePdfService {
                   '${cycle.maxTemperature} °C'),
               _row('Temperatura Máx. Sensor 2',
                   '${cycle.maxTemperature2} °C'),
-              _row('Pressão Máxima',
-                  '${cycle.maxPressure} bar'),
+              _row('Pressão Máxima (bar)',
+                  '${cycle.maxPressure}'),
             ],
           ),
 
@@ -125,7 +125,7 @@ class CyclePdfService {
                 'Tempo',
                 'Temp. 1 (°C)',
                 'Temp. 2 (°C)',
-                'Pressão',
+                'Pressão (bar)',
               ],
               headerStyle: pw.TextStyle(
                 fontSize: 9,

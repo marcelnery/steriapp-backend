@@ -28,6 +28,8 @@ class _ProfilePageState extends State<ProfilePage> {
   final stateController = TextEditingController();
 
   final dentistController = TextEditingController();
+  final cpfController = TextEditingController();
+  final operatorController = TextEditingController();
   final croController = TextEditingController();
 
   final emailController = TextEditingController();
@@ -122,6 +124,9 @@ void showAddAutoclaveDialog() {
       print("===== DADOS VINDOS DO MONGO =====");
       print(data);
 
+      print("CPF DO MONGO: ${data["cpf"]}");
+      print("OPERADOR DO MONGO: ${data["operator"]}");
+
       setState(() {
 
         clinicController.text = data["clinic"] ?? "";
@@ -132,6 +137,8 @@ void showAddAutoclaveDialog() {
         stateController.text = data["address"]?["state"] ?? "";
 
         dentistController.text = data["dentist"] ?? "";
+        cpfController.text = data["cpf"]??"";
+        operatorController.text = data["operator"]??"";
         croController.text = data["cro"] ?? "";
         emailController.text = data["email"]??"";
         phoneController.text = data["phone"]??"";
@@ -288,16 +295,36 @@ TextField(
             const SizedBox(height: 10),
 
             TextField(
-              controller: dentistController,
-              decoration: const InputDecoration(labelText: "Dentista"),
-               readOnly: true,
-            ),
+  controller: dentistController,
+  decoration: const InputDecoration(
+    labelText: "Dentista",
+  ),
+  readOnly: true,
+),
 
-            TextField(
-              controller: croController,
-              decoration: const InputDecoration(labelText: "CRO"),
-               readOnly: true,
-            ),
+TextField(
+  controller: cpfController,
+  decoration: const InputDecoration(
+    labelText: "CPF",
+  ),
+  readOnly: true,
+),
+
+TextField(
+  controller: operatorController,
+  decoration: const InputDecoration(
+    labelText: "Operador",
+  ),
+  readOnly: true,
+),
+
+TextField(
+  controller: croController,
+  decoration: const InputDecoration(
+    labelText: "CRO",
+  ),
+  readOnly: true,
+),
 
             const SizedBox(height: 30),
 
