@@ -4,6 +4,9 @@ import '../services/label_counter_service.dart';
 import '../../cycles/models/cycle_model.dart'; 
 import '../models/label_model.dart';
 import '../services/label_pdf_service.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../../auth/auth_service.dart';
 
 class LabelPrintPage extends StatefulWidget {
 
@@ -22,6 +25,9 @@ class _LabelPrintPageState extends State<LabelPrintPage> {
 
   final counter = LabelCounterService.instance;
   final repository = CyclesRepository.instance;
+
+String clinicName = "";
+String operatorName ="";
 
   final TextEditingController qtyGController = TextEditingController();
   final TextEditingController qtyMController = TextEditingController();
@@ -52,14 +58,50 @@ class _LabelPrintPageState extends State<LabelPrintPage> {
         program: cycle.program,
         publicUrl: cycle.publicUrl,
         responsible: "Responsável Técnico",
+        operator: operatorName,
+        clinicName: clinicName,
         sterilizationDate: cycle.startTime,
-        validityDate: cycle.startTime.add(const Duration(days: 7)),
+        validityDate: DateTime(cycle.startTime.year,
+                               cycle.startTime.month + 6,
+                               cycle.startTime.day,
+          )
       ),
     );
   }
 
   return labels;
 }
+
+Future<void> loadUserData() async {
+
+  final token = await AuthService.getToken();
+
+  final response = await http.get(
+    Uri.parse(
+      "https://backend-nu-nine-29.vercel.app/api/user",
+    ),
+    headers: {
+      "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
+    },
+  );
+
+  if (response.statusCode == 200) {
+
+    final data = jsonDecode(response.body);
+
+    setState(() {
+      clinicName = data["clinic"] ?? "";
+      operatorName = data["operator"] ?? "";
+    });
+
+    print("🏥 CLINICA: $clinicName");
+    print("👤 OPERADOR: $operatorName");
+  } else {
+    print("ERRO AO BUSCAR USUARIO");
+  }
+}
+
 
   @override
   void initState() {
@@ -70,6 +112,8 @@ class _LabelPrintPageState extends State<LabelPrintPage> {
   Future<void> _initialize() async {
 
     await counter.load();
+
+    await loadUserData();
 
     final lastCycleObj = repository.getLastCycle();
     lastBleCycle = lastCycleObj?.cycleNumber ?? 0;
@@ -122,7 +166,7 @@ class _LabelPrintPageState extends State<LabelPrintPage> {
   print("Etiquetas geradas: ${labels.length}");
 await LabelPdfService.generatePdf(
   labels: labels,
-  clinicName: "NOME DA CLÍNICA",
+  clinicName: clinicName,
 );
 
   // 🔹 Depois confirma contador

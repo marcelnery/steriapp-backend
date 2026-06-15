@@ -93,7 +93,8 @@ class LabelPdfService {
                             crossAxisAlignment:
                                 pw.CrossAxisAlignment.start,
                             children: [
-
+                              _line("Clínica",
+                                  label.clinicName),
                               _line("Esterilização",
                                   _formatDate(label.sterilizationDate)),
 
@@ -102,6 +103,8 @@ class LabelPdfService {
 
                               _line("Responsável",
                                   label.responsible),
+                              _line("Operador", 
+                                  label.operator),
 
                               _line("Lote",
                                   label.lotNumber),
