@@ -28,6 +28,7 @@ class _LabelPrintPageState extends State<LabelPrintPage> {
 
 String clinicName = "";
 String operatorName ="";
+String dentistName ="";
 
   final TextEditingController qtyGController = TextEditingController();
   final TextEditingController qtyMController = TextEditingController();
@@ -57,7 +58,7 @@ String operatorName ="";
         serialNumber: cycle.serialNumber,
         program: cycle.program,
         publicUrl: cycle.publicUrl,
-        responsible: "Responsável Técnico",
+        responsible: dentistName,
         operator: operatorName,
         clinicName: clinicName,
         sterilizationDate: cycle.startTime,
@@ -93,10 +94,12 @@ Future<void> loadUserData() async {
     setState(() {
       clinicName = data["clinic"] ?? "";
       operatorName = data["operator"] ?? "";
+      dentistName = data["dentist"] ?? "";
     });
 
     print("🏥 CLINICA: $clinicName");
     print("👤 OPERADOR: $operatorName");
+    print(" DENTISTA: $dentistName");
   } else {
     print("ERRO AO BUSCAR USUARIO");
   }
