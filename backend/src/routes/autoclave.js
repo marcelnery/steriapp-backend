@@ -145,4 +145,42 @@ router.post("/user/remove-autoclave", authMiddleware, async (req, res) => {
 
 });
 
+// ===============================
+// 👤 ALTERAR OPERADOR
+// ===============================
+
+router.post("/user/update-operator", authMiddleware, async (req, res) => {
+
+  try {
+
+    const { operator } = req.body;
+
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        error: "User not found"
+      });
+    }
+
+    user.operator = operator;
+
+    await user.save();
+
+    res.json({
+      success: true
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      error: "Erro ao atualizar operador"
+    });
+
+  }
+
+});
+
 export default router;
