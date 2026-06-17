@@ -1,6 +1,7 @@
 import express from "express";
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
+import {sendWelcomeEmail} from "../services/welcomeEmail.service.js"
 
 const router = express.Router();
 
@@ -82,6 +83,8 @@ const hashedPassword = await bcrypt.hash(password, 10);
   }))
 });
     await user.save();
+
+    await sendWelcomeEmail(user);
 
     console.log("======USUARIO SALVO=======");
     console.log(user);

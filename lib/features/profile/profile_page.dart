@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '/features/auth/auth_service.dart';
+import '../auth/auth_guard.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -203,6 +204,86 @@ Future<void> removeAutoclaveFromServer(String serial) async {
   }
 }
 
+Future<void> updateOperator(String operator) async {
+
+  final token = await AuthService.getToken();
+
+  final response = await http.post(
+    Uri.parse(
+      "https://backend-nu-nine-29.vercel.app/api/user/update-operator",
+    ),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    },
+    body: jsonEncode({
+      "operator": operator,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+
+    await loadUserData();
+
+  } else {
+
+    print("Erro ao atualizar operador");
+
+  }
+}
+
+void showOperatorDialog() {
+
+  final controller =
+      TextEditingController(text: operatorController.text);
+
+  showDialog(
+    context: context,
+    builder: (_) => AlertDialog(
+      title: const Text("Operador"),
+      content: TextField(
+        controller: controller,
+        decoration: const InputDecoration(
+          labelText: "Nome do Operador",
+        ),
+      ),
+      actions: [
+
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("Cancelar"),
+        ),
+
+        ElevatedButton(
+          onPressed: () async {
+
+            await updateOperator(
+              controller.text.trim(),
+            );
+
+            Navigator.pop(context);
+          },
+          child: const Text("Salvar"),
+        ),
+      ],
+    ),
+  );
+}
+
+
+Future<void> logout() async {
+
+  await AuthService.logout();
+
+  if (!mounted) return;
+
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (_) => const AuthGuard(),),
+    
+    (route) => false,
+  );
+}
   // =========================
   // UI
   // =========================
@@ -310,13 +391,6 @@ TextField(
   readOnly: true,
 ),
 
-TextField(
-  controller: operatorController,
-  decoration: const InputDecoration(
-    labelText: "Operador",
-  ),
-  readOnly: true,
-),
 
 TextField(
   controller: croController,
@@ -326,6 +400,53 @@ TextField(
   readOnly: true,
 ),
 
+GestureDetector(
+  onTap: showOperatorDialog,
+  child: Container(
+    margin: const EdgeInsets.only(bottom: 12),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.purple.shade50,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+        color: Colors.purple.shade200,
+      ),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        Row(
+          children: [
+
+            const Icon(
+              Icons.person,
+              color: Colors.blue,
+            ),
+
+            const SizedBox(width: 8),
+
+            const Text(
+              "OPERADOR",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 10),
+
+        Text(
+          operatorController.text.isEmpty
+              ? "Nenhum operador cadastrado"
+              : operatorController.text,
+        ),
+      ],
+    ),
+  ),
+),
             const SizedBox(height: 30),
 
             const Text(
@@ -372,6 +493,7 @@ const SizedBox(height: 15),
       }
     },
 
+
     // 🔥  CARD ORIGINAl
     child: Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -409,6 +531,22 @@ const SizedBox(height: 15),
     ),
   );
 }).toList(),
+
+const SizedBox(height: 30),
+
+ElevatedButton.icon(
+  icon: const Icon(Icons.logout),
+  label: const Text("Sair da Conta"),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.red,
+    foregroundColor: Colors.white,
+    minimumSize: const Size(
+      double.infinity,
+      55,
+    ),
+  ),
+  onPressed: logout,
+),
 
            
           ],
