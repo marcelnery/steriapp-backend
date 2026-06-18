@@ -27,20 +27,25 @@ async (email, token, nickname) => {
 
     subject: "Recuperação de Senha",
 
-    text: `
-Olá ${nickname}
+    text: `<h2>Recuperação de Senha</h2>
 
-Recebemos uma solicitação para redefinir sua senha.
+<p>Olá ${nickname}</p>
 
-Acesse:
+<p>Recebemos uma solicitação para redefinir sua senha.</p>
 
-${link}
+<p>
+<a href="${link}">
+Clique aqui para redefinir sua senha
+</a>
+</p>
 
-Este link expira em 1 hora.
+<p>Este link expira em 1 hora.</p>
 
-Equipe SteriApp
-ODONTOTECSANTOS
-WosonLatam tecnologia e biossegurança!
+<p>
+Equipe SteriApp<br>
+ODONTOTECSANTOS<br>
+WosonLatam Técnologia e Biossegurança!
+</p>
 `
 
   });
