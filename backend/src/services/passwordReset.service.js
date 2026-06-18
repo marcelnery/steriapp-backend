@@ -27,7 +27,7 @@ async (email, token, nickname) => {
 
     subject: "Recuperação de Senha",
 
-    text: `<h2>Recuperação de Senha</h2>
+    html: `<h2>Recuperação de Senha</h2>
 
 <p>Olá ${nickname}</p>
 
