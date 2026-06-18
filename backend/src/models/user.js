@@ -73,6 +73,9 @@ const userSchema = new mongoose.Schema({
 
    operator: String,
 
+   resetToken: String,
+   resetTokenExpires: Date,
+
   autoclaves: {
   type: [autoclaveSchema],
   default: []

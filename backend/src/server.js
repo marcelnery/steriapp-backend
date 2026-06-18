@@ -10,6 +10,8 @@ import registerRoutes from "./routes/register.js";
 import authRoutes from "./routes/auth.js";
 import User from "./models/user.js";
 import autoclaveRoutes from "./routes/autoclave.js";
+import forgotPasswordRoutes from "./routes/forgot-password.js";
+import resetPasswordRoutes from "./routes/reset-password.js";
 
 import { authMiddleware } from "./middleware/auth.middleware.js";  // NOVA ROTA CRIADA PARA ID UNICO 04/05
 
@@ -76,6 +78,8 @@ app.get('/', (req, res) => {
 app.use("/api", registerRoutes);
 app.use("/api", authRoutes); // rota para login
 app.use("/api", autoclaveRoutes); // rota para adicionar e excluir autoclave no CAD
+app.use("/api", forgotPasswordRoutes); // rota para mudar a senha 
+app.use("/api", resetPasswordRoutes); // rota para redirecionar senha e email
 app.use("/api",laudosGetRoutes); // rota para ciclos no dashboard html
 
 // ===============================

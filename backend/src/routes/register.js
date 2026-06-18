@@ -3,6 +3,7 @@ import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import {sendWelcomeEmail} from "../services/welcomeEmail.service.js"
 
+
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
