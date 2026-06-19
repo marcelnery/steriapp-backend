@@ -17,7 +17,7 @@ async (email, token, nickname) => {
   });
 
   const link =
-`steriapp://reset-password/${token}`;
+`https://steriapp.com.br/reset-password.html?token=${token}`;
 
   await transporter.sendMail({
 
@@ -27,7 +27,9 @@ async (email, token, nickname) => {
 
     subject: "Recuperação de Senha",
 
-    html: `<h2>Recuperação de Senha</h2>
+    html: `
+    
+    <h2>Recuperação de Senha</h2>
 
 <p>Olá ${nickname}</p>
 
