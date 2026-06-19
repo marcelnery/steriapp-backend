@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../cycles/pages/cycles_page.dart'; // ✅ Importa CyclesPage
 import '../errors/pages/error_parameters_page.dart';
 import '../profile/profile_page.dart';
+import './widgets/banner_carousel.dart';
 
 /// =========================
 /// DASHBOARD PRINCIPAL
@@ -145,20 +146,21 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ),
 
-            const SizedBox(height: 32),
+            const SizedBox(height: 15),
 
-            Expanded(
-              child: Center(
+            
+              Center(
                 child: Text(
                   'Bem-vindo ao SteriApp!\nClique em "Ciclos de Esterilização" para iniciar.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 20,
                     color: Colors.grey.shade700,
                   ),
                 ),
               ),
-            ),
+            const SizedBox(height:20),
+            const BannerCarousel(),
           ],
         ),
       ),

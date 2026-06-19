@@ -6,6 +6,7 @@ import 'features/dashboard/dashboard_page.dart';
 import 'features/cycles/pages/cycle_detail_page.dart';
 import 'features/public_laudo/pages/laudo_public_page.dart';
 import 'features/cycles/repositories/cycles_repository.dart';
+import 'features/auth/reset_password_page.dart';
 
 final GlobalKey<NavigatorState> navigatorKey =
     GlobalKey<NavigatorState>();
@@ -39,6 +40,26 @@ class _MyAppState extends State<MyApp> {
     _appLinks.uriLinkStream.listen(
       (uri) {
         try {
+
+            // =========================
+          // DEEP LINK INTERNO (APP)
+          // steriapp://resetpassword
+          // =========================
+
+          if (uri.scheme == 'steriapp' &&
+             uri.host == 'reset-password' &&
+             uri.pathSegments.isNotEmpty) {
+
+                  final token = uri.pathSegments.first;
+
+                         navigatorKey.currentState?.push(
+                       MaterialPageRoute(builder: (_) => ResetPasswordPage(token: token,
+              ),
+                ),
+                  );
+
+                        return;
+              }
           // =========================
           // DEEP LINK INTERNO (APP)
           // sterilink://cycle/123

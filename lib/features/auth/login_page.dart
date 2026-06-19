@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'auth_service.dart';
 import '../dashboard/dashboard_page.dart';
 import 'register_page.dart';
+import 'forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -170,6 +171,24 @@ class _LoginPageState extends State<LoginPage> {
         fontWeight: FontWeight.bold,
         letterSpacing: 0.5,
       ),
+    ),
+  ),
+),
+
+TextButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const ForgotPasswordPage(),
+      ),
+    );
+  },
+  child: const Text(
+    "Esqueci minha senha",
+    style: TextStyle(
+      color: wosonPurple,
+      fontWeight: FontWeight.bold,
     ),
   ),
 ),
