@@ -73,7 +73,7 @@ app.use("/api", laudoRoutes); // mudanca de rota para api 12/03
 // ===============================
 
 app.get('/debug-path', (req, res) => {
-  res.res.json({
+  res.json({
     
       cwd: process.cwd(),
       dirname: __dirname,
