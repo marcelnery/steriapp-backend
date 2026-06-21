@@ -64,7 +64,8 @@ const __dirname = path.dirname(__filename);
 // ===============================
 app.use(cors());
 app.use(express.json());
-const publicPath = path.join(process.cwd(), 'src/public');
+// const publicPath = path.join(process.cwd(), 'src/public');  // isto sera mudado para o acesso de arquivos publicados 20/06
+const publicPath = path.join(__dirname, 'public');
 app.use(express.static(publicPath));
 
 app.use("/api", laudoRoutes); // mudanca de rota para api 12/03
@@ -72,18 +73,6 @@ app.use("/api", laudoRoutes); // mudanca de rota para api 12/03
 // ROTA RAIZ
 // ===============================
 
-app.get('/teste-banner', (req, res) => {
-
-  res.sendFile(
-    path.join(
-      __dirname,
-      'public',
-      'banners',
-      'banner1.png'
-    )
-  );
-
-});
 
 
 app.get('/', (req, res) => {
