@@ -40,7 +40,7 @@ flutter:
   assets:
     - assets/images/
     - assets/mock/
-    - assets/banners/
+  
 
 flutter_launcher_icons:
        android: true

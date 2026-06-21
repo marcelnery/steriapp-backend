@@ -17,15 +17,19 @@ class _BannerCarouselState
 
   int current = 0;
 
-  final banners = [
+final banners = [
 
-    "assets/banners/banner1.png",
-    "assets/banners/banner2.png",
-    "assets/banners/banner3.png",
-    "assets/banners/banner4.png",
-    "assets/banners/banner5.png",
+  "https://backend-nu-nine-29.vercel.app/banners/banner1.png",
 
-  ];
+  "https://backend-nu-nine-29.vercel.app/banners/banner2.png",
+
+  "https://backend-nu-nine-29.vercel.app/banners/banner3.png",
+
+  "https://backend-nu-nine-29.vercel.app/banners/banner4.png",
+
+  "https://backend-nu-nine-29.vercel.app/banners/banner5.png",
+
+];
 
 
   @override
@@ -68,7 +72,7 @@ class _BannerCarouselState
 
         SizedBox(
 
-          height: 160,
+          height: 260,
 
           child: PageView.builder(
 
@@ -98,13 +102,66 @@ class _BannerCarouselState
                   borderRadius:
                       BorderRadius.circular(18),
 
-                  child: Image.asset(
 
-                    banners[index],
+// AGORA AS IMAGENS VIRAO DO MONGO E DO SITE PARA ALTERAÇÃO 20/06
 
-                    fit: BoxFit.cover,
+                 child: Image.network(
 
-                  ),
+  banners[index],
+
+  fit: BoxFit.cover,
+
+  loadingBuilder: (
+    context,
+    child,
+    loadingProgress,
+  ) {
+
+    if (loadingProgress == null) {
+      return child;
+    }
+
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  },
+
+  errorBuilder: (
+    context,
+    error,
+    stackTrace,
+  ) {
+
+    return Container(
+
+      color: Colors.grey.shade200,
+
+      child: const Center(
+
+        child: Column(
+
+          mainAxisAlignment:
+              MainAxisAlignment.center,
+
+          children: [
+
+            Icon(
+              Icons.image_not_supported,
+              size: 40,
+            ),
+
+            SizedBox(height: 10),
+
+            Text(
+              "Banner indisponível",
+            ),
+
+          ],
+        ),
+      ),
+    );
+  },
+),
                 ),
               );
 
