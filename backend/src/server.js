@@ -71,6 +71,21 @@ app.use("/api", laudoRoutes); // mudanca de rota para api 12/03
 // ===============================
 // ROTA RAIZ
 // ===============================
+
+app.get('/teste-banner', (req, res) => {
+  res.sendFile(
+    path.join(
+      process.cwd(),
+      'src',
+      'public',
+      'banners',
+      'banner1.png'
+    )
+  );
+});
+
+
+
 app.get('/', (req, res) => {
   res.send('🚀 Backend SteriLink rodando com sucesso AGORA');
 });
