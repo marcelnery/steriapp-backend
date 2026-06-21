@@ -9,22 +9,9 @@
   ],
 
   "routes": [
-
-    {
-      "src": "/banners/(.*)",
-      "dest": "/src/public/banners/$1"
-    },
-
-    {
-      "src": "/reset-password.html",
-      "dest": "/src/public/reset-password.html"
-    },
-
     {
       "src": "/(.*)",
-      "dest": "src/server.js"
+      "dest": "/src/server.js"
     }
-
   ]
 }
-
