@@ -38,8 +38,8 @@ class _CyclesPageState extends State<CyclesPage> {
   bool bleConnecting = false;
   bool bleConnected = false; // NOVO: indicador visual BLE
 
-  String? registeredSerial; // NOVA FUNCAO PARA COMPARAR O SERIAL RECEBIDO E O SERIAL TRANSMITIDO 07/05/2026
-
+  // String? registeredSerial; // NOVA FUNCAO PARA COMPARAR O SERIAL RECEBIDO E O SERIAL TRANSMITIDO 07/05/2026
+  final Set<String> registeredSerials = {}; // funcao trocada para fazer funcionar 2 e ate 3 autoclaves para transmissao 25/06
 @override
 void initState() {
   super.initState();
@@ -51,9 +51,9 @@ void initState() {
   _scrollController.addListener(_onScroll);
 }
 // ====================================================
-// NOVA ACAO PARA O SERIAL SER REGISTRADO E ANALISADO
+// NOVA ACAO PARA O SERIAL SER REGISTRADO E ANALISADO     antiga funcao 1 autoclave
 // ====================================================
-
+/*
 Future<void> loadRegisteredSerial() async {
   try {
 
@@ -76,6 +76,46 @@ Future<void> loadRegisteredSerial() async {
     debugPrint(e.toString());
   }
 }
+*/
+
+// ========================================
+// NOVA FUNCAO PARA 2 E ATE 3 ATUOCLAVES
+// ========================================
+
+Future<void> loadRegisteredSerial() async {
+  try {
+
+    final user = await repository.getLoggedUser();
+
+    registeredSerials.clear();
+
+    final autoclaves = user['autoclaves'] ?? [];
+
+    // Segurança: nunca permitir mais que 3
+    for (int i = 0; i < autoclaves.length && i < 3; i++) {
+
+      final serial = autoclaves[i]['serial']
+          .toString()
+          .replaceAll(' ', '')
+          .trim()
+          .toUpperCase();
+
+      registeredSerials.add(serial);
+    }
+
+    debugPrint("🔐 AUTOCLAVES AUTORIZADAS:");
+    for (final serial in registeredSerials) {
+      debugPrint(serial);
+    }
+
+  } catch (e) {
+
+    debugPrint("❌ Erro carregando autoclaves");
+    debugPrint(e.toString());
+
+  }
+}
+
 
   // =========================
   // PERMISSÕES BLE
@@ -180,14 +220,21 @@ final incomingSerial =
         .trim()
         .toUpperCase();
 
-debugPrint('📡 SERIAL RECEBIDO: $incomingSerial');
+// debugPrint('📡 SERIAL RECEBIDO: $incomingSerial'); antiga funcao para 1 autoclave
 
-debugPrint('🔐 SERIAL REGISTRADO: $registeredSerial');
+// debugPrint('🔐 SERIAL REGISTRADO: $registeredSerial'); antiga funcao para 1 autoclave
+
+debugPrint('📡 SERIAL RECEBIDO: $incomingSerial'); // nova funcao para 2 ate 3 autoclave debug 25/06/2026
+
+debugPrint('🔐 AUTOCLAVES CADASTRADAS:');
+for (final serial in registeredSerials) {
+  debugPrint(serial);
+}
 
 // ===============================
 // VALIDAÇÃO DE SEGURANÇA
 // ===============================
-
+/*
 if (registeredSerial == null ||
     registeredSerial!.isEmpty) {
 
@@ -210,6 +257,39 @@ if (incomingSerial != registeredSerial) {
       const SnackBar(
         content: Text(
           'AUTOCLAVE NÃO CADASTRADA OU CICLO SEM SN IGNORADO',
+        ),
+      ),
+    );
+  }
+
+  return;
+}
+
+*/  
+// FUNCAO ANTIGA SUBSTITUIDA POR ABAIXO 25/06/2026
+
+
+if (registeredSerials.isEmpty) {
+
+  debugPrint("❌ Nenhuma autoclave cadastrada");
+
+  return;
+}
+
+// ===============================
+// BLOQUEIO DE AUTOCLAVE ERRADA
+// ===============================
+
+if (!registeredSerials.contains(incomingSerial)) {
+
+  debugPrint("🚫 AUTOCLAVE NÃO AUTORIZADA");
+  debugPrint("🚫 Ciclo IGNORADO");
+
+  if (mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "AUTOCLAVE NÃO CADASTRADA",
         ),
       ),
     );
