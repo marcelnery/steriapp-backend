@@ -18,6 +18,18 @@ export const sendErrorEmail = async (cycle) => {
   const message = `
 ERRO DE AUTOCLAVE DETECTADO
 
+// DADOS PESSOAIS
+
+CLÍNICA: ${cycle.clinic}
+OPERADOR: ${cycle.operador}
+TELEFONE: ${cycle.phone}
+E-MAIL: ${cycle.email}]
+
+
+// DADOS DO EQUIPAMENTO 
+
+
+
 Equipamento: ${cycle.model}
 Serial: ${cycle.serialNumber}
 
