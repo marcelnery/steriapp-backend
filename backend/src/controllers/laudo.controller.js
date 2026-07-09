@@ -1,5 +1,6 @@
 import Cycle from "../models/Cycle.js";
 import CycleModel from "../models/cycle.model.js";
+import User from "../models/user.js";
 import { sendErrorEmail } from "../services/emailService.js";
 
 export const saveLaudo = async (req, res) => {
@@ -24,7 +25,15 @@ export const saveLaudo = async (req, res) => {
 
       try {
 
-        await sendErrorEmail(saved);
+        const user = await User.findById(req.userId);
+
+        await sendErrorEmail({...saved.toObject(),
+
+            clinic: user.clinic,
+            operator: user.operator,
+            phone: user.phone,
+            email: user.email,
+          });
 
         console.log("📧 Email enviado para fábrica");
 

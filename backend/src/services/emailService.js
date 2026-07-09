@@ -1,4 +1,7 @@
+
+import User from "../models/user.js";
 import nodemailer from "nodemailer";
+
 
 export const sendErrorEmail = async (cycle) => {
 
@@ -21,22 +24,17 @@ ERRO DE AUTOCLAVE DETECTADO
 // DADOS PESSOAIS
 
 CLÍNICA: ${cycle.clinic}
-OPERADOR: ${cycle.operador}
+OPERADOR: ${cycle.operator}
 TELEFONE: ${cycle.phone}
-E-MAIL: ${cycle.email}]
+E-MAIL: ${cycle.email}
 
 
 // DADOS DO EQUIPAMENTO 
 
-
-
 Equipamento: ${cycle.model}
 Serial: ${cycle.serialNumber}
-
 Ciclo: ${cycle.cycleNumber}
-
 Programa: ${cycle.program}
-
 Código de erro: ${cycle.errorCode}
 
 Link do laudo:
