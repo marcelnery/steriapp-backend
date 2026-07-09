@@ -162,8 +162,13 @@ class CycleModel {
   final String status =
       payload['status']?.toString() ?? "unknown";
 
+  final String safeDate = date
+    .replaceAll("/", "-")
+    .replaceAll(" ", "")
+    .trim();
+
   /// ✅ ID PROFISSIONAL (NÃO MUDA NUNCA)
-  final String id = "$serial|$date|$cycleStr|$status";
+  final String id = "$serial|$safeDate|$cycleStr|$status";
 
   final DateTime now = DateTime.now();
 
