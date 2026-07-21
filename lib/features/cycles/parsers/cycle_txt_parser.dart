@@ -132,9 +132,16 @@ print(isICT ? "ICT" : "");
       return CycleModel(
         id: id,
         cycleNumber: cycleNumber,
+
+        clinic: "",
+        dentist: "",
+        operator: "",
+        format: isCBR ? "CBR":"ICT",
         model: model,
         serialNumber: serialNumber,
         version: version,
+        firmware: version,
+        
         program: program.isNotEmpty ? program : 'Esterilização',
         sterilizationTemperature: sterilizationTemperature,
         sterilizationTime: sterilizationTime,

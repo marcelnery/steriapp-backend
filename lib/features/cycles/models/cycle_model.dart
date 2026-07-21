@@ -13,11 +13,21 @@ class CycleModel {
   final int cycleNumber;
 
   // ===============================
+  // IDENTIFICAÇÃO DE USUARIO E PROPIETARIO 16/07
+  //=================================
+
+  final String clinic;
+  final String dentist;
+  final String operator;
+  // ===============================
   // IDENTIFICAÇÃO DO EQUIPAMENTO
   // ===============================
   final String model;
+
+  final String format;
   final String serialNumber;
   final String version;
+  final String firmware;
   final String? equipmentName;
 
   // ===============================
@@ -73,9 +83,14 @@ class CycleModel {
   CycleModel({
     required this.id,
     required this.cycleNumber,
+    required this.clinic,
+    required this.dentist,
+    required this.operator,
+    required this.format,
     required this.model,
     required this.serialNumber,
     required this.version,
+    required this.firmware,
     required this.program,
     required this.sterilizationTemperature,
     required this.sterilizationTime,
@@ -104,9 +119,14 @@ class CycleModel {
     return CycleModel(
       id: json['id']?.toString() ?? '',
       cycleNumber: json['cycleNumber'] ?? 0,
+       clinic: json['clinic']?.toString() ?? '',
+       dentist: json['dentist']?.toString() ?? '',
+       operator: json['operator']?.toString() ?? '',
       model: json['model']?.toString() ?? '',
+      format: json['format']?.toString() ?? '',
       serialNumber: json['serialNumber']?.toString() ?? '',
       version: json['version']?.toString() ?? '',
+      firmware: json['firmware']?.toString()?? json['version']?.toString()??'',
       equipmentName: json['equipmentName']?.toString(),
       program: json['program']?.toString() ?? '',
       sterilizationTemperature:
@@ -274,9 +294,14 @@ try {
   return CycleModel(
     id: id,
     cycleNumber: cycleNumber,
+    clinic: payload['clinic']?.toString() ?? "",
+    dentist: payload['dentist']?.toString() ?? "",
+    operator: payload['operator']?.toString() ?? "",
     model: payload['model']?.toString() ?? '',
+    format: payload['format']?.toString() ?? '',
     serialNumber: serial,
-    version: '',
+    version: payload['version']?.toString() ?? '',
+    firmware: payload['firmware']?.toString()?? payload['version']?.toString()??'',
     program: payload['program']?.toString() ?? '',
     sterilizationTemperature:(payload['ster_temp'] as num?)?.toDouble() ?? 0,
     sterilizationTime:((payload['ster_time'] ?? 0) / 60).round(),
@@ -324,9 +349,15 @@ maxPressure: maxPressure,
     return {
       'id': id,
       'cycleNumber': cycleNumber,
+
+      'clinic': clinic,
+      'dentist': dentist,
+      'operator': operator,
+      'format': format,
       'model': model,
       'serialNumber': serialNumber,
       'version': version,
+      'firmware': firmware,
       'equipmentName': equipmentName,
       'program': program,
       'sterilizationTemperature': sterilizationTemperature,

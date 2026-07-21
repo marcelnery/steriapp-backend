@@ -20,6 +20,7 @@ class CyclesRepository {
   // =========================
   final List<CycleModel> _cycles = [];
   final CycleTxtParser _parser = CycleTxtParser();
+  Map<String, dynamic>? _loggedUser;
 
   static const String baseUrl =
       'https://backend-nu-nine-29.vercel.app';
@@ -82,8 +83,21 @@ final response = await http.get(
     }
 
     final Map<String, dynamic> json = jsonDecode(response.body);
+
+    
     final List<dynamic> data = json['data'] ?? [];
 
+
+    print("================PRIMEIRO CICLO===================");
+    print(data.first);
+  
+print("CLINIC  = ${data.first['clinic']}");
+print("DENTIST = ${data.first['dentist']}");
+print("OPERATOR = ${data.first['operator']}");
+
+print("=================================");
+print(json);
+print("=================================");
     final List<CycleModel> newCycles = data
         .map((e) => CycleModel.fromJson(e))
         .toList();
@@ -109,7 +123,55 @@ final response = await http.get(
 
 CycleModel? addFromBleJson(Map<String, dynamic> json) {
 
-  final cycle = CycleModel.fromBleJson(json);
+  final baseCycle = CycleModel.fromBleJson(json);
+
+final user = _loggedUser;
+
+print("==================================");
+print("CACHE DO USUÁRIO:");
+print(user);
+print("==================================");
+
+final cycle = CycleModel(
+  id: baseCycle.id,
+  cycleNumber: baseCycle.cycleNumber,
+
+  clinic: user?["clinic"]?.toString() ?? "",
+  dentist: user?["dentist"]?.toString() ?? "",
+  operator: user?["operator"]?.toString() ?? "",
+
+  format: baseCycle.format,
+  model: baseCycle.model,
+  serialNumber: baseCycle.serialNumber,
+  version: baseCycle.version,
+  firmware: baseCycle.firmware,
+  equipmentName: baseCycle.equipmentName,
+  program: baseCycle.program,
+
+  sterilizationTemperature: baseCycle.sterilizationTemperature,
+  sterilizationTime: baseCycle.sterilizationTime,
+  vacuumTime: baseCycle.vacuumTime,
+  dryTime: baseCycle.dryTime,
+
+  sterTemp: baseCycle.sterTemp,
+  sterTime: baseCycle.sterTime,
+
+  maxTemperature: baseCycle.maxTemperature,
+  maxTemperature2: baseCycle.maxTemperature2,
+  maxPressure: baseCycle.maxPressure,
+
+  startTime: baseCycle.startTime,
+  endTime: baseCycle.endTime,
+
+  result: baseCycle.result,
+  errorCode: baseCycle.errorCode,
+
+  stages: baseCycle.stages,
+
+  rawDateTime: baseCycle.rawDateTime,
+  isCompleteCycle: baseCycle.isCompleteCycle,
+  isValid: baseCycle.isValid,
+);
 
   if (exists(cycle.id)) {
     print("⚠️ Ciclo já recebido: ${cycle.id}");
@@ -257,7 +319,52 @@ CycleModel? getLatestCycle() {
 
 CycleModel? getLatestCycleBySerial(String serial) {
 
+  String normalize(String value) {
+
+    return value
+        .replaceAll("SN.:", "")
+        .replaceAll("SN.", "")
+        .replaceAll("SN:", "")
+        .replaceAll("SN", "")
+        .replaceAll(":", "")
+        .replaceAll(".", "")
+        .replaceAll(" ", "")
+        .trim()
+        .toUpperCase();
+
+  }
+
+  final serialSelecionado = normalize(serial);
+
   final filtered = _cycles.where((c) {
+
+    return normalize(c.serialNumber) == serialSelecionado;
+
+  }).toList();
+
+  if (filtered.isEmpty) {
+
+    print("❌ Nenhum ciclo encontrado para:");
+    print(serialSelecionado);
+
+    return null;
+
+  }
+
+  filtered.sort(
+    (a, b) => b.cycleNumber.compareTo(a.cycleNumber),
+  );
+
+  return filtered.first;
+}
+
+/*
+
+CycleModel? getLatestCycleBySerial(String serial) {
+
+  final filtered = _cycles.where((c) {
+
+    
 
     return c.serialNumber
         .replaceAll(" ", "")
@@ -281,6 +388,10 @@ CycleModel? getLatestCycleBySerial(String serial) {
 
   return filtered.first;
 }
+
+*/
+
+
   // =========================
   // LOOKUPS
   // =========================
@@ -335,9 +446,17 @@ Future<Map<String, dynamic>> getLoggedUser() async {
 
   final json = jsonDecode(response.body);
 
-  print('👤 USUÁRIO LOGADO:');
+
+  print("==========================");
+  print('👤 USUÁRIO LOGADO BAIXADO DO BACKEND:');
   print(json);
 
+  
+  _loggedUser = json;
+
+  print("=================================");
+  print("👤 CACHE SALVO:");
+  print(_loggedUser);
   return json;
 }
 

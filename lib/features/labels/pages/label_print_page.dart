@@ -97,12 +97,33 @@ Future<void> loadUserData() async {
 Map<String, dynamic>? selectedAutoclave;
 
 if (widget.lastCycle != null) {
-  for (final a in autoclaves) {
-    if (a["serial"] == widget.lastCycle!.serialNumber) {  // adicionado para pegar a autoclave selecionada e fazer o ciclo correto 13/07
-      selectedAutoclave = Map<String, dynamic>.from(a);
-      break;
-    }
+
+   for (final a in autoclaves) {
+
+  final cadastro =
+      (a["serial"] ?? "")
+          .toString()
+          .replaceAll("SN.:", "")
+          .replaceAll("SN.", "")
+          .replaceAll("SN:", "")
+          .replaceAll(":", "")
+          .trim();
+
+  final ciclo =
+      widget.lastCycle!.serialNumber
+          .replaceAll("SN.:", "")
+          .replaceAll("SN.", "")
+          .replaceAll("SN:", "")
+          .replaceAll(":", "")
+          .trim();
+
+  if (cadastro == ciclo) {
+    selectedAutoclave = Map<String, dynamic>.from(a);
+    break;
   }
+}
+
+
 }
 
     setState(() {

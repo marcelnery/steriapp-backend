@@ -22,6 +22,13 @@ class CycleDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     const wosonPurple = Color(0xFF5E2B97);
 
+      print("================================");
+  print("CYCLE DETAIL");
+  print("Clínica: ${cycle.clinic}");
+  print("Dentista: ${cycle.dentist}");
+  print("Operador: ${cycle.operator}");
+  print("================================");
+
     return Scaffold(
       appBar: AppBar(
        title: Text(
@@ -62,6 +69,34 @@ class CycleDetailPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+
+                _sectionTitle('Informações do Cliente'),
+
+                _infoCard(
+                          children: [
+
+                              _infoRow(
+                                   Icons.local_hospital,
+                                      "Clínica",
+                                        cycle.clinic,
+                                          ),
+
+                              _infoRow(
+                                    Icons.person,
+                                       "Dentista",
+                                        cycle.dentist,
+                                           ),
+
+                              _infoRow(
+                                     Icons.badge,
+                                       "Operador",
+                                         cycle.operator,
+                                           ),
+
+                          ],
+                        ),
+
+                        
                 _sectionTitle('Informações Gerais'),
                 _infoCard(children: [
                   _infoRow(Icons.precision_manufacturing, 'Modelo', cycle.model),

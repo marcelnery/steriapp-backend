@@ -247,6 +247,8 @@ Future<void> loadRegisteredSerial() async {
 final incomingSerial =
     (json['serial'] ?? '')
         .toString()
+        .replaceAll(':', '')
+        .replaceAll('.', '')
         .replaceAll(' ', '')
         .trim()
         .toUpperCase();
@@ -486,14 +488,29 @@ final cycle = repository.addFromBleJson(json);
   @override
   Widget build(BuildContext context) {
     const wosonPurple = Color(0xFF5E2B97);
-    final displayedCycles = selectedSerial == "ALL"
+  final displayedCycles = selectedSerial == "ALL"
     ? cycles
     : cycles.where((c) {
 
-        return c.serialNumber
-            .replaceAll(" ", "")
+        final cycleSerial = c.serialNumber
+            .replaceAll(':', '')
+            .replaceAll('.', '')
+            .replaceAll(' ', '')
             .trim()
-            .toUpperCase() == selectedSerial;
+            .toUpperCase();
+
+        final selected = selectedSerial
+            .replaceAll(':', '')
+            .replaceAll('.', '')
+            .replaceAll(' ', '')
+            .trim()
+            .toUpperCase();
+
+                print("Filtro = $selected");
+                print("Ciclo  = $cycleSerial");
+
+        return cycleSerial == selected;
+    
 
       }).toList();
 
@@ -552,6 +569,13 @@ else {
       );
 
 }
+
+print("=========================");
+print("CICLO PARA IMPRESSÃO");
+print(cycleToPrint?.model);
+print(cycleToPrint?.serialNumber);
+print(cycleToPrint?.program);
+print("=========================");
 
 Navigator.push(
   context,

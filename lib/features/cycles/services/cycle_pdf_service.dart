@@ -55,6 +55,19 @@ class CyclePdfService {
         footer: (context) => _footer(context),
 
         build: (context) => [
+
+          _section(
+          'Identificação do Cliente',
+           [
+
+            _row('Clínica', _safe(cycle.clinic)),
+            _row('Dentista', _safe(cycle.dentist)),  // IDENTIFICACAO NO PDF DE DADOS DO CLIENTE CADASTRADO 18/07 
+            _row('Operador', _safe(cycle.operator)),
+
+          ],
+          ),
+
+pw.SizedBox(height: 16),
           _section(
             'Identificação do Equipamento',
             [
