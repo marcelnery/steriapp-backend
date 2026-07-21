@@ -588,7 +588,7 @@ Navigator.push(
       },
       icon: const Icon(Icons.print, color: Colors.white),
       label: const Text(
-        "Imprimir",
+        "Imprimir\nETIQUETA🏷️",
         style: TextStyle(color: Colors.white),
       ),
     ),
