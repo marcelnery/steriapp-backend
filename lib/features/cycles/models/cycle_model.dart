@@ -171,10 +171,24 @@ class CycleModel {
   final int cycleNumber =
       int.tryParse(cycleStr) ?? 0;
 
+/*
+
   final String serial =
-      payload['serial']?.toString().trim().isNotEmpty == true
+      payload['serial']?.toString().trim().isNotEmpty == true       FUNCAO SUBSTITUIDA PARA PEGAR NUMERO DE SERIE CORRETO 20/07
           ? payload['serial'].toString()
           : "UNKNOWN";
+
+*/ 
+
+final String rawSerial =
+    payload['serial']?.toString() ?? "";
+
+final match = RegExp(r'S[A-Za-z0-9]+').firstMatch(rawSerial);
+
+final String serial =
+    match != null ? match.group(0)! : "UNKNOWN";
+
+
 
   final String date =
       payload['date']?.toString() ?? "NODATE";
