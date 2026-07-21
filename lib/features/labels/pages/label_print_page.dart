@@ -29,6 +29,7 @@ class _LabelPrintPageState extends State<LabelPrintPage> {
 String clinicName = "";
 String operatorName ="";
 String dentistName ="";
+String autoclaveModel ="";
 
   final TextEditingController qtyGController = TextEditingController();
   final TextEditingController qtyMController = TextEditingController();
@@ -51,10 +52,10 @@ String dentistName ="";
 
     labels.add(
       LabelModel(
-        cycleNumber: cycle.cycleNumber,
+        cycleNumber: nextCycle,
         globalNumber: nextGlobal,
-        lotNumber: "${cycle.cycleNumber}-$nextGlobal",
-        model: cycle.model,
+        lotNumber: "$nextCycle-$nextGlobal",
+        model: autoclaveModel.isNotEmpty? autoclaveModel: cycle.model,
         serialNumber: cycle.serialNumber,
         program: cycle.program,
         publicUrl: cycle.publicUrl,
@@ -91,10 +92,25 @@ Future<void> loadUserData() async {
 
     final data = jsonDecode(response.body);
 
+    final autoclaves = data["autoclaves"] ?? [];
+
+Map<String, dynamic>? selectedAutoclave;
+
+if (widget.lastCycle != null) {
+  for (final a in autoclaves) {
+    if (a["serial"] == widget.lastCycle!.serialNumber) {  // adicionado para pegar a autoclave selecionada e fazer o ciclo correto 13/07
+      selectedAutoclave = Map<String, dynamic>.from(a);
+      break;
+    }
+  }
+}
+
     setState(() {
       clinicName = data["clinic"] ?? "";
       operatorName = data["operator"] ?? "";
       dentistName = data["dentist"] ?? "";
+      
+      autoclaveModel = selectedAutoclave?["model"]??"";
     });
 
     print("🏥 CLINICA: $clinicName");
@@ -118,8 +134,7 @@ Future<void> loadUserData() async {
 
     await loadUserData();
 
-    final lastCycleObj = repository.getLastCycle();
-    lastBleCycle = lastCycleObj?.cycleNumber ?? 0;
+   lastBleCycle = widget.lastCycle?.cycleNumber ?? 0;
 
     nextCycle = counter.getNextCycle(lastBleCycle);
 
@@ -203,7 +218,7 @@ Widget build(BuildContext context)
 
 final lastCycle = widget.lastCycle;
 
-final model = lastCycle?.model ?? "";
+final model = autoclaveModel.isNotEmpty? autoclaveModel: (lastCycle?.model??"");
 final serial = lastCycle?.serialNumber ?? "";
 final program = lastCycle?.program ?? "";
 

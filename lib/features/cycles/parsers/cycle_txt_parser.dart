@@ -3,6 +3,30 @@ import '../models/cycle_model.dart';
 class CycleTxtParser {
   CycleModel parse(String txt) {
     try {
+
+// =======================================
+// DETECÇÃO DO FORMATO DO ARQUIVO             novo formato para identificacao de ICT OU CBR 14/07
+// =======================================
+
+final bool isCBR =
+    txt.contains("MEDICAL REPORT");
+
+final bool isICT =
+    txt.contains("ICTSN");
+// =======================================
+// VALIDAÇÃO DO FORMATO
+// =======================================
+
+if (!isCBR && !isICT) {
+  throw Exception(
+    "Formato de arquivo não suportado.\n"
+    "O SteriApp aceita somente arquivos CBR ou ICT."
+  );
+}
+
+print("📄 Formato detectado:");
+print(isCBR ? "CBR" : "");
+print(isICT ? "ICT" : "");
       final lines = txt
           .replaceAll('\r', '')
           .split('\n')

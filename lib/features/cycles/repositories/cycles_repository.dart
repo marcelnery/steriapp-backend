@@ -93,6 +93,10 @@ final response = await http.get(
     }
 
     _cycles.addAll(newCycles);
+
+    _cycles.sort(
+     (a, b) => b.cycleNumber.compareTo(a.cycleNumber),  // mudanca feita para ordenar ciclo tambem do backend em decrescente 14/07
+       );
     return newCycles;
 
   } catch (_) {
@@ -102,27 +106,6 @@ final response = await http.get(
   }
 }
 
-  // =========================
-  // ADD FROM BLE JSON
-  // =========================
-  
-/* CycleModel? addFromBleJson(Map<String, dynamic> json) {
-
-  final cycle = CycleModel.fromBleJson(json);
-
-  if (exists(cycle.id)) {
-    print("⚠️ Ciclo já recebido: ${cycle.id}");
-    return null;
-  }
-
-  _cycles.add(cycle);
-
-  print("✅ Novo ciclo BLE: ${cycle.id}");
-
-  return cycle;
-}
-
-*/
 
 CycleModel? addFromBleJson(Map<String, dynamic> json) {
 
@@ -134,6 +117,14 @@ CycleModel? addFromBleJson(Map<String, dynamic> json) {
   }
 
   _cycles.add(cycle);
+
+// ===============================
+// MANTER SEMPRE EM ORDEM DECRESCENTE        MUDANCA FEITA PARA EXIBIR O CICLO QUE CHEGA DA ESP EM PRIMEIRO 14/07
+// ===============================
+
+_cycles.sort(
+  (a, b) => b.cycleNumber.compareTo(a.cycleNumber),
+);
 
   print("✅ Novo ciclo BLE: ${cycle.id}");
 
@@ -231,12 +222,65 @@ void removeCycleByNumber(int cycleNumber) {
   List<CycleModel> getAllCycles() => List.unmodifiable(_cycles);
 
   void clearAll() => _cycles.clear();
+// ===================================
+// CICLO MAIS RECENTE (MAIOR NÚMERO)
+// ===================================
 
-  CycleModel? getLastCycle() {
+
+
+ CycleModel? getLastCycle() {
     if (_cycles.isEmpty) return null;
     return _cycles.last;
+}
+
+// ========================================
+// ciclo mais recente maior numero
+// ========================================
+
+
+CycleModel? getLatestCycle() {
+
+  if (_cycles.isEmpty) return null;
+
+  final sorted = _cycles.toList()
+    ..sort(
+      (a, b) => b.cycleNumber.compareTo(a.cycleNumber),
+    );
+
+  return sorted.first;
+}
+
+
+// ===================================
+// CICLO MAIS RECENTE POR AUTOCLAVE
+// ===================================
+
+CycleModel? getLatestCycleBySerial(String serial) {
+
+  final filtered = _cycles.where((c) {
+
+    return c.serialNumber
+        .replaceAll(" ", "")
+        .trim()
+        .toUpperCase() ==
+
+        serial
+        .replaceAll(" ", "")
+        .trim()
+        .toUpperCase();
+
+  }).toList();
+
+  if (filtered.isEmpty) {                                    // MUDAMOS A REGRA DO JOGO 14/07
+    return null;
   }
 
+  filtered.sort(
+    (a, b) => b.cycleNumber.compareTo(a.cycleNumber),
+  );
+
+  return filtered.first;
+}
   // =========================
   // LOOKUPS
   // =========================

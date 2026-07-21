@@ -9,9 +9,14 @@ export default class CycleModel {
 
     this.userId = data.userId;          // MUDANCA IMPORTANTE PARA IDENTIFICACAO DO USUARIO PARA CILCOS 07/05/2026
 
+    this.clinic = data.clinic || "";
+    this.dentist = data.dentist || "";
+    this.operator = data.operator || "";
+
     // ===============================
     // IDENTIFICAÇÃO DO CICLO
     // ===============================
+
     this.cycleNumber = Number(data.cycleNumber);
 
     // ===============================
@@ -19,7 +24,9 @@ export default class CycleModel {
     // ===============================
     this.model = data.model;
     this.serialNumber = data.serialNumber;
-    this.version = data.version || '';
+     this.format = data.format || "";
+    this.version = data.version || "";
+     this.firmware = data.firmware || this.version ||"";
     this.equipmentName = data.equipmentName || null;
 
     // ===============================
@@ -107,11 +114,16 @@ this.sterTime = data.sterTime !== undefined ? Number(data.sterTime) : null;
     return {
       id: this.id,
       userId: this.userId,
+      clinic: this.clinic,
+      dentist: this.dentist,
+      operator: this.operator,
       cycleNumber: this.cycleNumber,
 
       model: this.model,
       serialNumber: this.serialNumber,
+      format: this.format,
       version: this.version,
+      firmware: this.firmware,
       equipmentName: this.equipmentName,
 
       program: this.program,

@@ -1,3 +1,5 @@
+// VERSÃO ATUALIZADA 13/07 STERIAPP COM LAYOUT MAIS ATRATIVO PARA DUAS OU TRES AUTOCLAVES
+
 
 import 'dart:io';
 import 'dart:async';
@@ -38,8 +40,16 @@ class _CyclesPageState extends State<CyclesPage> {
   bool bleConnecting = false;
   bool bleConnected = false; // NOVO: indicador visual BLE
 
-  // String? registeredSerial; // NOVA FUNCAO PARA COMPARAR O SERIAL RECEBIDO E O SERIAL TRANSMITIDO 07/05/2026
+  // FUNCAO SUBSTITUIDA String? registeredSerial; // NOVA FUNCAO PARA COMPARAR O SERIAL RECEBIDO E O SERIAL TRANSMITIDO 07/05/2026
   final Set<String> registeredSerials = {}; // funcao trocada para fazer funcionar 2 e ate 3 autoclaves para transmissao 25/06
+  final Map<String, String> registeredModels = {};
+ // =====================================
+ // FILTRO DE AUTOCLAVES                     NOVA FUNCAO PARA CRIAR BOTAO DE SEPARACAO DE CICLOS, QUANDO 2 OU MAIS AUTOCLAVES 13/07
+ // ===================================== 
+ 
+List<Map<String, dynamic>> userAutoclaves = [];
+String selectedSerial = "ALL";
+
 @override
 void initState() {
   super.initState();
@@ -88,8 +98,11 @@ Future<void> loadRegisteredSerial() async {
     final user = await repository.getLoggedUser();
 
     registeredSerials.clear();
+    registeredModels.clear();
 
     final autoclaves = user['autoclaves'] ?? [];
+
+    userAutoclaves = List<Map<String, dynamic>>.from(autoclaves);
 
     // Segurança: nunca permitir mais que 3
     for (int i = 0; i < autoclaves.length && i < 3; i++) {
@@ -100,14 +113,32 @@ Future<void> loadRegisteredSerial() async {
           .trim()
           .toUpperCase();
 
-      registeredSerials.add(serial);
+        final model =
+
+      autoclaves[i]['model']
+
+          .toString()
+
+          .trim();
+
+       registeredSerials.add(serial);
+
+       registeredModels[serial] = model;
+
+    
     }
 
-    debugPrint("🔐 AUTOCLAVES AUTORIZADAS:");
-    for (final serial in registeredSerials) {
-      debugPrint(serial);
-    }
+         debugPrint("🔐 AUTOCLAVES:");
 
+         registeredModels.forEach((serial, model) {
+
+         debugPrint("$model -> $serial");
+
+        });
+    
+      if(mounted) {
+        setState((){});
+      }
   } catch (e) {
 
     debugPrint("❌ Erro carregando autoclaves");
@@ -455,16 +486,41 @@ final cycle = repository.addFromBleJson(json);
   @override
   Widget build(BuildContext context) {
     const wosonPurple = Color(0xFF5E2B97);
+    final displayedCycles = selectedSerial == "ALL"
+    ? cycles
+    : cycles.where((c) {
 
+        return c.serialNumber
+            .replaceAll(" ", "")
+            .trim()
+            .toUpperCase() == selectedSerial;
+
+      }).toList();
+
+String pageTitle = "Ciclos de Esterilização";
+
+if (selectedSerial != "ALL") {
+
+  final serials = registeredSerials.toList();
+
+  final index = serials.indexOf(selectedSerial);
+
+  final model = registeredModels[selectedSerial] ?? "Autoclave";
+
+  if (index >= 0) {
+    pageTitle = "$model ${index + 1}";
+  }
+
+}
     return Scaffold(
    appBar: AppBar(
-  title: const Text(
-    'Ciclos de Esterilização',
-    style: TextStyle(
-      color: Colors.white,
-      fontWeight: FontWeight.bold,
-    ),
+  title: Text(
+  pageTitle,
+  style: const TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
   ),
+),
   backgroundColor: wosonPurple,
   iconTheme: const IconThemeData(
     color: Colors.white,
@@ -472,12 +528,37 @@ final cycle = repository.addFromBleJson(json);
   actions: [
     TextButton.icon(
       onPressed: () {
-   Navigator.push(
+CycleModel? cycleToPrint;
+
+// ===============================
+// TODAS AS AUTOCLAVES
+// ===============================
+
+if (selectedSerial == "ALL") {
+
+  cycleToPrint = repository.getLatestCycle();
+
+}
+
+// ===============================
+// AUTOCLAVE SELECIONADA
+// ===============================
+
+else {
+
+  cycleToPrint =
+      repository.getLatestCycleBySerial(
+        selectedSerial,
+      );
+
+}
+
+Navigator.push(
   context,
   MaterialPageRoute(
-   builder: (_) => LabelPrintPage(
-  lastCycle: repository.getLastCycle(),
-),
+    builder: (_) => LabelPrintPage(
+      lastCycle: cycleToPrint,
+    ),
   ),
 );
       },
@@ -555,6 +636,83 @@ final cycle = repository.addFromBleJson(json);
 ),
 const SizedBox(height: 12),
 
+// ======================================
+// FILTRO DE AUTOCLAVES (2 OU 3)
+// ======================================
+
+if (userAutoclaves.length > 1)
+
+  SizedBox(
+    height: 46,
+    child: ListView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      children: [
+
+        // BOTÃO TODAS
+        Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: ChoiceChip(
+            label: const Text("Todas"),
+            selected: selectedSerial == "ALL",
+            onSelected: (_) {
+
+              setState(() {
+                selectedSerial = "ALL";
+              });
+
+            },
+          ),
+        ),
+
+        // AUTOCLAVES
+        ...List.generate(userAutoclaves.length, (index) {
+
+          final autoclave = userAutoclaves[index];
+
+          final serial = autoclave["serial"]
+              .toString()
+              .replaceAll(" ", "")
+              .trim()
+              .toUpperCase();
+
+          final model = autoclave["model"] ?? "Autoclave";
+
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: ChoiceChip(
+
+              label: Text(
+                "$model ${index + 1}",
+              ),
+
+              selected: selectedSerial == serial,
+
+              onSelected: (_) {
+
+                setState(() {
+
+                  selectedSerial = serial;
+
+                });
+
+              },
+            ),
+          );
+
+        }),
+
+      ],
+    ),
+  ),
+
+const SizedBox(height: 12),
+// =========================
+// FILTRO DOS CICLOS          funcao criada para usuario com mais do que 1 autoclave 13/07
+// =========================
+
+
+
           // =========================
           // LISTA DE CICLOS     OS CARDS BONITOS QUE APARECEM A CADA NOVO CICLO
           // =========================
@@ -562,13 +720,13 @@ const SizedBox(height: 12),
             child: ListView.builder(
               controller: _scrollController,
               padding: const EdgeInsets.all(16),
-              itemCount: cycles.length + (loadingMore ? 1 : 0),
+              itemCount: displayedCycles.length + (loadingMore ? 1 : 0),
               itemBuilder: (context, index) {
-                if (index >= cycles.length) {
+                if (index >= displayedCycles.length) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                final c = cycles[index];
+                final c = displayedCycles[index];
 
                 return Card(
                   elevation: 4,

@@ -63,11 +63,23 @@ final List<ErrorModel> errorCodes = [
   ),
 
   const ErrorModel(
+  code: "Er11",
+  title: "Sensor elétrico da porta",
+  description:
+      "Falha detectada no sensor elétrico da porta da autoclave.",
+),
+
+  const ErrorModel(
     code: "Er12",
     title: "Falha de vácuo",
     description: "Sistema de vácuo não conseguiu atingir o nível necessário.",
   ),
-
+  const ErrorModel(
+  code: "Er14",
+  title: "Diferença de temperatura na câmara",
+  description:
+      "Diferença superior a 2°C dentro da câmara durante a esterilização.",
+),
   const ErrorModel(
     code: "Er98",
     title: "Queda de energia",

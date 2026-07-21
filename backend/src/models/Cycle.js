@@ -18,11 +18,18 @@ const CycleSchema = new mongoose.Schema(
               required: true,
             },
 
+    clinic: String,
+    dentist: String,  // NOVOS CAMPOS ADICIONADOS PARA O CYCLE DETAIL PAGE 18/07
+    operator: String,
+
+
     cycleNumber: Number,
 
     model: String,
     serialNumber: String,
+    format: String,
     version: String,
+    firmware: String,
     equipmentName: String,
 
     program: String,
