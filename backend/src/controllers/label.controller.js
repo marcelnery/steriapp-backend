@@ -2,39 +2,61 @@ import path from "path";
 import { fileURLToPath } from "url";
 import Cycle from "../models/Cycle.js";
 
+// =======================================
+// __dirname para ES Modules
+// =======================================
+
 const __filename = fileURLToPath(import.meta.url);
-const _dirname = path.dirname(_filename);
+const __dirname = path.dirname(__filename);
+
+// =======================================
+// ABRIR ETIQUETA
+// =======================================
 
 export async function openLabel(req, res) {
 
-    try {
+  try {
 
-        const serial = decodeURIComponent(req.params.serial)
-            .replace(/:/g, "")
-            .trim()
-            .toUpperCase();
+    const serial = decodeURIComponent(req.params.serial)
+      .replace(/SN\.:?/gi, "")
+      .replace(/SN:?/gi, "")
+      .replace(/:/g, "")
+      .replace(/\s/g, "")
+      .trim()
+      .toUpperCase();
 
-        const cycleNumber = Number(req.params.cycle);
+    const cycleNumber = Number(req.params.cycle);
 
-        const cycle = await Cycle.findOne({
-            cycleNumber: cycleNumber,
-        });
+    console.log("Etiqueta consultada:");
+    console.log("Serial:", serial);
+    console.log("Ciclo :", cycleNumber);
 
-        if (!cycle) {
+    // ==================================================
+    // (Nesta primeira versão procura apenas pelo ciclo)
+    // Na próxima etapa vamos procurar por:
+    // serial + cycleNumber + userId
+    // ==================================================
 
-            return res.sendFile(
-                path.join(__dirname, "..", "public", "label_pending.html")
-            );
-        }
+    const cycle = await Cycle.findOne({
+      cycleNumber,
+    });
 
-        return res.redirect(`/laudo/${cycle.id}`);
+    if (!cycle) {
 
-    } catch (err) {
-
-        console.error(err);
-
-        return res.status(500).send("Erro interno");
+      return res.sendFile(
+        path.join(__dirname, "../public/label_pending.html")
+      );
 
     }
+
+    return res.redirect(`/laudo/${cycle.id}`);
+
+  } catch (err) {
+
+    console.error("Erro openLabel:", err);
+
+    return res.status(500).send("Erro interno do servidor");
+
+  }
 
 }
