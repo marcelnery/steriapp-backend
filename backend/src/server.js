@@ -17,6 +17,8 @@ import { authMiddleware } from "./middleware/auth.middleware.js";  // NOVA ROTA 
 
 import laudosGetRoutes from "./routes/laudos.get.js";  // criado para o dashboard html ver ciclos 
 
+import labelRoutes from "./routes/label.routes.js";   // criado para qr code html de etiqueta prox 20/07
+
 dotenv.config();
 
 
@@ -69,6 +71,7 @@ const publicPath = path.join(__dirname, 'public');
 app.use(express.static(publicPath));
 
 app.use("/api", laudoRoutes); // mudanca de rota para api 12/03
+
 // ===============================
 // ROTA RAIZ
 // ===============================
@@ -85,7 +88,7 @@ app.use("/api", autoclaveRoutes); // rota para adicionar e excluir autoclave no 
 app.use("/api", forgotPasswordRoutes); // rota para mudar a senha 
 app.use("/api", resetPasswordRoutes); // rota para redirecionar senha e email
 app.use("/api",laudosGetRoutes); // rota para ciclos no dashboard html
-
+app.use("/", labelRoutes); // rota criada para QRcode sair correto em cada etiqueta do ciclo seguinte  20/07
 // ===============================
 // GET USER DATA                   nova rota para pegar o CAD do cliente 23/03 NOVA ATT 04/05 ID UNICO RETIRADA DO EMAIL
 // ===============================

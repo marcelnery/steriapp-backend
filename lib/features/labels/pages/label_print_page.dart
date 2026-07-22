@@ -50,6 +50,16 @@ String autoclaveModel ="";
 
     nextGlobal++;
 
+    final serial = Uri.encodeComponent(cycle.serialNumber
+    
+          .replaceAll("SN.:", "")
+          .replaceAll("SN.", "")
+          .replaceAll("SN:", "")
+          .replaceAll(":", "")
+          .trim(),
+    
+    );
+
     labels.add(
       LabelModel(
         cycleNumber: nextCycle,
@@ -58,7 +68,7 @@ String autoclaveModel ="";
         model: autoclaveModel.isNotEmpty? autoclaveModel: cycle.model,
         serialNumber: cycle.serialNumber,
         program: cycle.program,
-        publicUrl: cycle.publicUrl,
+        publicUrl: "https://backend-nu-nine-29.vercel.app/label/$serial/$nextCycle",
         responsible: dentistName,
         operator: operatorName,
         clinicName: clinicName,
@@ -439,23 +449,29 @@ final program = lastCycle?.program ?? "";
           // BOTÃO DINÂMICO
           // ===============================
           if (total > 0)
-            ElevatedButton(
-              onPressed: _confirmDialog,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: wosonPurple,
-                minimumSize: const Size(double.infinity, 65),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
-                ),
-              ),
-              child: Text(
-                "CRIAR PDF ($total etiquetas)",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          ElevatedButton.icon(
+                      onPressed: _confirmDialog,
+                      icon: const Icon(
+                      Icons.picture_as_pdf,
+                                           color: Colors.white,
+                                       ),
+                      label: Text(
+                                   "CRIAR PDF ($total etiquetas)",
+                      style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                                ),
+                            ),
+                   style: ElevatedButton.styleFrom(
+                   backgroundColor: wosonPurple,
+                   foregroundColor: Colors.white,
+                   minimumSize: const Size(double.infinity, 65),
+                   shape: RoundedRectangleBorder(
+                   borderRadius: BorderRadius.circular(18),
+                     ),
+                  ),
+              )
         ],
       ),
     ),
