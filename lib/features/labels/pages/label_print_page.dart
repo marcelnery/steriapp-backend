@@ -60,6 +60,11 @@ String autoclaveModel ="";
     
     );
 
+
+print("--------------------------------");
+print("QR GERADO:");
+print("https://backend-nu-nine-29.vercel.app/label/$serial/$nextCycle");
+print("--------------------------------");
     labels.add(
       LabelModel(
         cycleNumber: nextCycle,

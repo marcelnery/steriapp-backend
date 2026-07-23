@@ -24,7 +24,7 @@ class _SplashPageState extends State<SplashPage>
     // =========================
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 4),
+      duration: const Duration(seconds: 5),
     );
 
     _fadeAnimation =

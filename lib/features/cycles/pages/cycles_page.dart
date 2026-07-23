@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../labels/pages/label_print_page.dart';
-
+import '../../labels/pages/label_splash_page.dart';
 import '../models/cycle_model.dart';
 import '../repositories/cycles_repository.dart';
 import '../../ble/ble_service.dart';
@@ -580,7 +580,7 @@ print("=========================");
 Navigator.push(
   context,
   MaterialPageRoute(
-    builder: (_) => LabelPrintPage(
+    builder: (_) => LabelSplashPage(
       lastCycle: cycleToPrint,
     ),
   ),
