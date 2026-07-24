@@ -4,6 +4,15 @@ import 'package:flutter/material.dart';
 import 'label_print_page.dart';
 import '../../cycles/models/cycle_model.dart';
 
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../../auth/auth_service.dart';
+import '../services/label_counter_service.dart';
+
+
+
+
+
 class LabelSplashPage extends StatefulWidget {
   final CycleModel? lastCycle;
 
@@ -31,6 +40,25 @@ class _LabelSplashPageState extends State<LabelSplashPage>
   late Animation<double> _overlayOpacity;
   late Animation<double> _progress;
 
+//=====================================
+// DADOS DA SESSÃO
+//=====================================
+
+final counter = LabelCounterService.instance;
+
+String clinicName = "";
+
+String operatorName = "";
+
+String dentistName = "";
+
+String autoclaveModel = "";
+
+int nextCycle = 0;
+
+bool sessionLoaded = false;
+
+
   final List<bool> _steps = [
     false,
     false,
@@ -40,6 +68,8 @@ class _LabelSplashPageState extends State<LabelSplashPage>
   ];
 
   final List<String> stepTitles = [
+
+    
 
     "Validando dados da clínica",
 
@@ -116,7 +146,163 @@ _overlayOpacity = Tween<double>(
         curve: Curves.easeInOut,
       ),
     );
+//=====================================
+// CARREGA TODA A SESSÃO DO LABEL
+//=====================================
 
+Future<void> _loadSessionData() async {
+
+  try {
+
+    //----------------------------------------------------
+    // contador
+    //----------------------------------------------------
+
+    await counter.load();
+
+    //----------------------------------------------------
+    // token
+    //----------------------------------------------------
+
+    final token = await AuthService.getToken();
+
+    //----------------------------------------------------
+    // usuário
+    //----------------------------------------------------
+
+    final response = await http.get(
+
+      Uri.parse(
+        "https://backend-nu-nine-29.vercel.app/api/user",
+      ),
+
+      headers: {
+
+        "Authorization": "Bearer $token",
+
+        "Content-Type": "application/json",
+
+      },
+
+    );
+
+    if (response.statusCode != 200) {
+
+      print("Erro carregando usuário");
+
+      return;
+
+    }
+
+    final data = jsonDecode(response.body);
+
+    //----------------------------------------------------
+    // autoclaves cadastradas
+    //----------------------------------------------------
+
+    final autoclaves = data["autoclaves"] ?? [];
+
+    Map<String,dynamic>? selectedAutoclave;
+
+    if(widget.lastCycle != null){
+
+      final cicloSerial = widget.lastCycle!.serialNumber
+
+          .replaceAll("SN.:", "")
+
+          .replaceAll("SN.", "")
+
+          .replaceAll("SN:", "")
+
+          .replaceAll(":", "")
+
+          .trim();
+
+      for(final a in autoclaves){
+
+        final cadastro =
+
+            (a["serial"] ?? "")
+
+                .toString()
+
+                .replaceAll("SN.:","")
+
+                .replaceAll("SN.","")
+
+                .replaceAll("SN:","")
+
+                .replaceAll(":","")
+
+                .trim();
+
+        if(cadastro == cicloSerial){
+
+          selectedAutoclave =
+
+              Map<String,dynamic>.from(a);
+
+          break;
+
+        }
+
+      }
+
+    }
+
+    //----------------------------------------------------
+    // grava sessão
+    //----------------------------------------------------
+
+    clinicName = data["clinic"] ?? "";
+
+    operatorName = data["operator"] ?? "";
+
+    dentistName = data["dentist"] ?? "";
+
+    autoclaveModel =
+
+        selectedAutoclave?["model"] ?? "";
+
+    //----------------------------------------------------
+    // próximo ciclo
+    //----------------------------------------------------
+
+    final lastBleCycle =
+
+        widget.lastCycle?.cycleNumber ?? 0;
+
+    nextCycle =
+
+        counter.getNextCycle(lastBleCycle);
+
+    sessionLoaded = true;
+
+    print("================================");
+
+    print("SESSION LABEL");
+
+    print(clinicName);
+
+    print(operatorName);
+
+    print(dentistName);
+
+    print(autoclaveModel);
+
+    print(nextCycle);
+
+    print("================================");
+
+  }
+
+  catch(e){
+
+    print(e);
+
+  }
+
+}
     _startAnimation();
   }
 
@@ -750,3 +936,4 @@ class _CheckItem extends StatelessWidget {
   }
 
 }
+
